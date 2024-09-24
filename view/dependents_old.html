@@ -1,0 +1,431 @@
+
+    <div ng-controller="dependents">
+  <div class="titles">Dependents Form </div>  
+<form  name="Ddependent" novalidate> 
+    <div class="formsec">    
+        <ul class="formshow list3">
+            <li>
+                <div class="form-group">
+                  <label class="required">Pensioner Id</label>
+                  <select class="form-control" ng-options="pensioner.pensionerId as pensioner.pensionerId for pensioner in allPensionersData | orderBy:'displayName'" name="pensionerId" required ng-model="form.pensionerId" 
+                  ng-change="payDataById(form.pensionerId); payDataById1(form.pensionerId);">
+                    <option value="" disabled selected >Select Pensioner Id</option>
+                    </select>
+                </div>
+                <div class="error" ng-show="Ddependent.pensionerId.$error.required && Ddependent.$submitted && !formSubmitted" style="color: red;">
+                  This field is required.
+                </div>
+            </li>
+
+            <li ng-if="form.employeeName">
+              <div class="form-group" >
+                <label class="required">Employee Name </label>
+                <input type="text" class="form-control"  placeholder="Employee name" name="employeeName"  ng-model="form.employeeName"  disabled/>
+              </div>
+          </li>  
+          <li ng-if="form.payCommissionCode">
+            <div class="form-group" >
+              <label class="required">PayCommision Code</label>
+              <input type="text" class="form-control"  placeholder="PayCommision Code" name="payCommissionCode"  ng-model="form.payCommissionCode" disabled />
+            </div>
+        </li>
+      <li ng-if="form.aadhaar">
+        <div class="form-group" >
+          <label class="required">Aadhar No.</label>
+          <input type="text" class="form-control"  placeholder="Aadhar No." name="aadhaar"  ng-model="form.aadhaar"  disabled/>
+        </div>
+    </li>
+  <li ng-if="form.pan">
+    <div class="form-group" >
+      <label class="">Pan No</label>
+      <input type="text" class="form-control"  placeholder="Pan No." name="pan"  ng-model="form.pan" disabled />
+    </div>
+  </li>
+
+  <li ng-if="form.pensionerStatusCode || form.pensionerStatusCode=='0' ">
+    <div class="form-group">
+      <label class="required">Pensioner Status code</label>
+      <select class="form-control" ng-model="form.pensionerStatusCode" name="pensionerStatusCode" data-live-search="true"  ng-options="x.pensionerStatusCode as x.dscr for x in pensionerStatusData" disabled>
+    </select>
+    </div>
+  </li>
+<li ng-if="form.collegeCode">
+  <div class="form-group" ng-if="form.collegeCode">
+    <label class="required">College</label>
+    <select class="form-control" ng-model="form.collegeCode" name="collegeCode" data-live-search="true" title="Select College" ng-options="x.collegeShortName as x.dscr for x in clgs" disabled>
+      <option value="" disabled selected>Select College</option>
+  </select>
+  
+  </div>
+</li>
+<li ng-if="form.departmentCode">
+  <div class="form-group" ng-if="form.departmentCode">
+    <label class="required">Department</label>
+    <select class="form-control" ng-model="form.departmentCode" name="departmentCode" data-live-search="true" title="Select department" ng-options="x.deptShortName as x.dscr for x in depts" disabled>
+      <option value="" disabled selected>Select College</option>
+  </select>
+  
+  </div>
+</li>
+
+
+            <li>
+              <div class="form-group">
+                <label class="required">Pensioner Nominee</label>
+                <select class="form-control" name="pensionNominee" required   ng-model="form.pensionNominee">
+                  <option value="">Select</option>
+                  <option value="Y">Yes</option>
+                  <option value="N">No</option>
+                </select>
+              </div>
+              <div class="error" ng-show="Ddependent.pensionNominee.$error.required && Ddependent.$submitted && !formSubmitted" style="color: red;">
+                This field is required.
+              </div> 
+          </li>
+            <li>
+                <div class="form-group">
+                  <label class="required">Dependent Name </label>
+                  <input type="text" class="form-control" placeholder="Dependent Name" name="dependentName" required ng-model="form.dependentName" ng-pattern="/^[a-zA-Z ]*$/" maxlength="50" ng-disabled="nom"/>
+                </div>
+                <div class="error" ng-show="Ddependent.dependentName.$error.required && Ddependent.$submitted && !formSubmitted" style="color: red;">
+                  This field is required.
+                </div>
+                <div class="error" ng-show="Ddependent.dependentName.$error.pattern" style="color: red;">
+                  Please enter only alphabatically.
+                </div>
+            </li>
+
+            <li>
+              <div class="form-group">
+                <label>Pension Percentage</label>
+                <input type="text" class="form-control" placeholder="Pension Percentage" name="pensionPerc"  ng-model="form.pensionPerc" maxlength="5" ng-pattern="/^[0-9.]*$/" ng-disabled="nom" />
+              </div> 
+              <div class="error" ng-show="Ddependent.pensionPerc.$error.pattern"  style="color: red;">
+                Only numeric characters are allowed.
+            </div>
+          </li>
+            <li>
+                <div class="form-group">
+                  <label class="required">Date of Birth </label>
+                  <input type="text" class="datepicker form-control" datepicker name="dateOfBirth" required title="Select Date" placeholder="dateOfBirth" ng-model="form.dateOfBirth" ng-change="validateDates()" ng-disabled="nom"/>
+                </div> 
+                <div class="error" ng-show="Ddependent.dateOfBirth.$error.required && Ddependent.$submitted && !formSubmitted" style="color: red;">
+                  This field is required.
+                </div>
+
+            </li>
+            <li>
+              <div class="form-group">
+                <label class="required">Pensioner Relation</label>
+                <select class="form-control"  name="pensionerRelation" required ng-model="form.pensionerRelation" ng-disabled="nom" >
+                  <option value="" selected>Select</option>
+                <option value={{x.pensionerRelation}} ng-repeat="x in relation" selected>{{x.pensionerRelation}} </option>
+                </select>              
+              </div>
+              <div class="error" ng-show="Ddependent.pensionerRelation.$error.required && Ddependent.$submitted && !formSubmitted" style="color: red;">
+                This field is required.
+              </div> 
+            </li>
+          <li>
+            <div class="form-group">
+              <label class="required">Married</label>            
+              <select class="form-control" name="marrieds" required   ng-model="form.married" ng-change="maried(form.married)">
+                <option value="">Select</option>
+                <option value="Y">Yes</option>
+                <option value="N">No</option>
+              </select>
+            </div>
+            <div class="error" ng-show="Ddependent.marrieds.$error.required && Ddependent.$submitted && !formSubmitted" style="color: red;">
+              This field is required.
+            </div> 
+        </li>
+        <li>
+          <div class="form-group">
+            <label>Date Of Marriage </label>
+            <input type="text" class="datepicker form-control" datepicker title="Select Date" placeholder="Date Of Marriage" ng-model="form.dateOfMarriage" ng-disabled="mar" ng-change="validateDates()" />
+          </div> 
+          <div ng-show="invalidDate">
+            <p class="error"  style="color: red;">Date of marriage should be greater than date of birth.</p>
+          </div>
+      </li>
+      <!-- <li>
+        <div class="form-group">
+          <label class="">Phy Handicapped Code</label> 
+        <select class="form-control" 
+          ng-options="x.phyHandicappedCode as x.phyHandicappedCode + '-' + x.handicapType for x in phyHandicaped | filter:{phyHandicappedCode: '!!'}" 
+          name="collegeTypeCode"  ng-model="form.phyHandicappedCode">
+          <option value=""  selected>Select</option>
+       </select>
+        </div>
+      </li> -->
+           <li>
+            <div class="form-group">
+              <label class="">Phy Handicapped Code</label> 
+            <select class="form-control"  
+              name="collegeTypeCode"  ng-model="form.phyHandicappedCode">
+              <option value=""  selected>Select</option>
+              <option value="x.phyHandicappedCode"  ng-repeat="x in phyHandicaped">{{x.handicapType}}</option>
+           </select>
+            </div>
+          </li> 
+        </ul> 
+        <div> <button type="button" class="btn bluebtn" ng-click="saveDependents(form)">Submit</button></div>
+    </div>
+    <div ng-show="showSuccess" class="success-message">Data Posted Successfully!</div>
+    <div ng-show="showDelete" class="delete-message">Delete Data Successfully!</div>
+
+
+  </form>
+
+     <!-- data List -->
+        <div>
+          <div class="titles lists" data-aos="fade-up" data-aos-duration="1000">Data List </div>   
+          <!-- <div class="tabletop fcs">
+                 <div><button class="btn bluebtn" data-toggle="modal" id="exportToExcel" data-backdrop="static" data-keyboard="false"><i class="fa fa-download"></i> Download</button></div>
+                 <div class="searchfield"><input class="form-control" type="text" value="" placeholder="Search" ng-model="searchId" value="" placeholder="Search By Id"/></div>
+               </div> -->
+         <div class="tablesec">
+                 <table class="table table-striped">
+                   <thead>
+                     <tr>
+                      <!-- <th>Image</th> -->
+                       <th width="90">Pensioner Id</th>
+                       <th width="200">Dependent Name </th>
+                       <th width="100">Pension Nominee </th>
+                       <th width="110">Pension Percentage</th>
+                       <th width="100">Date of Birth</th>
+                       <th width="110">Pensioner Relation  </th>                      
+                       <th width="100">Married</th>
+                       <th width="110">Date Of Marriage</th>
+                       <th width="100">Phy Handicapped Code</th>
+                       <th width="110">Actions</th>
+                     </tr>
+                   </thead>         
+                   <tbody>
+                     <tr ng-repeat="x in alldependent | filter: {pensionerId:searchId}">
+                       <!-- <td><img src="images/users.jpg" alt="img" height="26" class="rounded" /></td> -->
+                       <td>{{x.pensionerId}}</td>
+                       <td>{{x.dependentName | uppercase}}</td>
+                       <td>{{x.pensionNominee | uppercase}}</td>
+                       <td>{{x.pensionPerc}}</td>
+                       <td>{{x.dateOfBirth}}</td>
+                       <td>{{x.pensionerRelation | uppercase}}</td>
+                       <td>{{x.married | uppercase}}</td>
+                       <td>{{x.dateOfMarriage}}</td>
+                       <td ng-bind="getPayCode(x.phyHandicappedCode) "></td>
+                       <!-- <td>{{x.phyHandicappedCode}}</td> -->
+                       <td> 
+                        <button class="btn editbtn" data-toggle="modal" data-placement="top" data-target="#editpensioner"
+                        title="Edit" ng-click="editData(x); payDataById(x.pensionerId);"><i class="fa fa-pencil"></i></button>
+                         <!-- <button class="btn editbtn" data-toggle="modal" data-placement="top" title="Edit" ng-click="editData(x); payDataById(x.pensionerId);"><i class="fa fa-pencil"></i></button> -->
+                         <!-- <button class="btn viewbtn" data-toggle="modal" data-placement="top" title="View"><i class="fa fa-eye"></i></button> -->
+                         <!-- <button class="btn deletebtn" data-toggle="modal" data-placement="top" title="Delete" ng-click="DeleteData(x.pensionerId,x.slNo,$index)"><i class="fa fa-trash"></i></button>  -->
+                         <button class="btn deletebtn" data-toggle="modal" data-target="#deleteModal" data-placement="top" ng-click="setDeleteData(x)"
+                         title="Delete" > <i class="fa fa-trash" ></i>  </button>
+                       </td>
+
+                       <div class="modal fade" id="deleteModal" role="dialog" data-backdrop="static">
+                        <div class="modal-dialog modal-sm">
+                          <div class="modal-content">
+                            <div class="modal-body">
+                              <div class="formsec nobg">
+                                <h4 class="modal-title text-center"> Are you sure, you want to delete this data?</h4>                     
+                                </div>
+                                <div class="text-center">
+                                  <button type="button" class="btn bluebtn " style="padding: 5px;width:70px;color: beige;" data-dismiss="modal">Cancel</button>
+                                  <button type="button" class="btn bluebtn" style="padding: 5px;width:70px;color: beige;"
+                                  ng-click="DeleteData(deleteDataModel.pensionerId,deleteDataModel.slNo,$index)">Delete</button>
+                                </div>
+                            </div>                 
+                          </div>
+                        </div>
+                      </div>
+                       
+
+                     </tr>                   
+                   </tbody>
+                 </table>
+               </div>
+        </div>
+<!-- data list End -->
+
+ <!-- modal for edit -->
+ <div class="modal fade" id="editpensioner" data-backdrop="static">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" ng-click="closemodal();cls();">&times;</button>
+        <h4 class="modal-title text-center">Edit Dependents</h4>
+      </div>
+      <div class="modal-body">
+          <form class="formsec" name="my">
+            <ul class="formshow list3">
+              <li>
+                  <div class="form-group">
+                    <label class="required">Pensioner Id</label>
+                    <select class="form-control" ng-options="pensioner.pensionerId as pensioner.pensionerId for pensioner in allPensionersData | orderBy:'displayName'" name="pensionerId" required ng-model="form.pensionerId" ng-disabled="flag" 
+                    ng-change="payDataById(form.pensionerId); payDataById1(form.pensionerId);">
+                      <option value=""  >Select Pensioner Id</option>
+                      </select>
+                  </div>
+                  <div class="error" ng-show="my.pensionerId.$error.required && my.$submitted && !formSubmitted" style="color: red;">
+                    This field is required.
+                  </div>
+              </li>
+  
+              <li ng-if="form.employeeName">
+                <div class="form-group" >
+                  <label class="required">Employee Name </label>
+                  <input type="text" class="form-control"  placeholder="Employee name" name="employeeName"  ng-model="form.employeeName"  disabled/>
+                </div>
+            </li>  
+            <li ng-if="form.payCommissionCode">
+              <div class="form-group" >
+                <label class="required">PayCommision Code</label>
+                <input type="text" class="form-control"  placeholder="PayCommision Code" name="payCommissionCode"  ng-model="form.payCommissionCode" disabled />
+              </div>
+          </li>
+        <li ng-if="form.aadhaar">
+          <div class="form-group" >
+            <label class="required">Aadhar No.</label>
+            <input type="text" class="form-control"  placeholder="Aadhar No." name="aadhaar"  ng-model="form.aadhaar"  disabled/>
+          </div>
+      </li>
+    <li ng-if="form.pan">
+      <div class="form-group" >
+        <label class="">Pan No</label>
+        <input type="text" class="form-control"  placeholder="Pan No." name="pan"  ng-model="form.pan" disabled />
+      </div>
+    </li>
+  
+    <li ng-if="form.pensionerStatusCode || form.pensionerStatusCode=='0' ">
+      <div class="form-group">
+        <label class="required">Pensioner Status code</label>
+        <select class="form-control" ng-model="form.pensionerStatusCode" name="pensionerStatusCode" data-live-search="true"  ng-options="x.pensionerStatusCode as x.dscr for x in pensionerStatusData" disabled>
+      </select>
+      </div>
+    </li>
+  <li ng-if="form.collegeCode">
+    <div class="form-group" ng-if="form.collegeCode">
+      <label class="required">College</label>
+      <select class="form-control" ng-model="form.collegeCode" name="collegeCode" data-live-search="true" title="Select College" ng-options="x.collegeShortName as x.dscr for x in clgs" disabled>
+        <option value="" disabled selected>Select College</option>
+    </select>
+    
+    </div>
+  </li>
+  <li ng-if="form.departmentCode">
+    <div class="form-group" ng-if="form.departmentCode">
+      <label class="required">Department</label>
+      <select class="form-control" ng-model="form.departmentCode" name="departmentCode" data-live-search="true" title="Select department" ng-options="x.deptShortName as x.dscr for x in depts" disabled>
+        <option value="" disabled selected>Select College</option>
+    </select>
+    
+    </div>
+  </li> 
+              <li>
+                <div class="form-group">
+                  <label class="required">Pensioner Nominee</label>
+                  <select class="form-control" name="pensionNominee" required   ng-model="form.pensionNominee">
+                    <option value="">Select</option>
+                    <option value="Y">Yes</option>
+                    <option value="N">No</option>
+                  </select>
+                </div>
+                <div class="error" ng-show="my.pensionNominee.$error.required && my.$submitted && !formSubmitted" style="color: red;">
+                  This field is required.
+                </div> 
+            </li>
+              <li>
+                  <div class="form-group">
+                    <label class="required">Dependent Name </label>
+                    <input type="text" class="form-control" placeholder="Dependent Name" name="dependentName" required ng-model="form.dependentName" ng-pattern="/^[a-zA-Z ]*$/" maxlength="50" ng-disabled="nom"/>
+                  </div>
+                  <div class="error" ng-show="my.dependentName.$error.required && my.$submitted && !formSubmitted" style="color: red;">
+                    This field is required.
+                  </div>
+                  <div class="error" ng-show="my.dependentName.$error.pattern" style="color: red;">
+                    Please enter only alphabatically.
+                  </div>
+              </li>
+  
+              <li>
+                <div class="form-group">
+                  <label>Pension Percentage</label>
+                  <input type="text" class="form-control" placeholder="Pension Percentage" name="pensionPerc"  ng-model="form.pensionPerc" maxlength="5" ng-pattern="/^[0-9.]*$/" ng-disabled="nom" />
+                </div> 
+                <div class="error" ng-show="my.pensionPerc.$error.pattern"  style="color: red;">
+                  Only numeric characters are allowed.
+              </div>
+            </li>
+              <li>
+                  <div class="form-group">
+                    <label class="required">Date of Birth </label>
+                    <input type="text" class="datepicker form-control" datepicker name="dateOfBirth" required title="Select Date" placeholder="dateOfBirth" ng-model="form.dateOfBirth" ng-change="validateDates()" ng-disabled="nom"/>
+                  </div> 
+                  <div class="error" ng-show="my.dateOfBirth.$error.required && my.$submitted && !formSubmitted" style="color: red;">
+                    This field is required.
+                  </div>
+  
+              </li>
+              <li>
+                <div class="form-group">
+                  <label class="required">Pensioner Relation</label>
+                  <select class="form-control"  name="pensionerRelation" required ng-model="form.pensionerRelation" ng-disabled="nom" >
+                    <option value="" selected>Select</option>
+                  <option value={{x.pensionerRelation}} ng-repeat="x in relation" selected>{{x.pensionerRelation}} </option>
+                  </select>              
+                </div>
+                <div class="error" ng-show="my.pensionerRelation.$error.required && my.$submitted && !formSubmitted" style="color: red;">
+                  This field is required.
+                </div> 
+              </li>
+            <li>
+              <div class="form-group">
+                <label class="required">Married</label>            
+                <select class="form-control" name="marrieds" required   ng-model="form.married" ng-change="maried(form.married)">
+                  <option value="">Select</option>
+                  <option value="Y">Yes</option>
+                  <option value="N">No</option>
+                </select>
+              </div>
+              <div class="error" ng-show="my.marrieds.$error.required && my.$submitted && !formSubmitted" style="color: red;">
+                This field is required.
+              </div> 
+          </li>
+          <li>
+            <div class="form-group">
+              <label>Date Of Marriage </label>
+              <input type="text" class="datepicker form-control" datepicker title="Select Date" placeholder="Date Of Marriage" ng-model="form.dateOfMarriage" ng-disabled="mar" ng-change="validateDates()" />
+            </div> 
+            <div ng-show="invalidDate">
+              <p class="error"  style="color: red;">Date of marriage should be greater than date of birth.</p>
+            </div>
+        </li>
+             <li>
+              <div class="form-group">
+                <label class="">Phy Handicapped Code</label> 
+              <select class="form-control" 
+                ng-options="x.phyHandicappedCode as x.phyHandicappedCode + '-' + x.handicapType for x in phyHandicaped | filter:{phyHandicappedCode: '!!'}" 
+                name="collegeTypeCode"  ng-model="form.phyHandicappedCode">
+                <option value=""  selected>Select</option>
+             </select>
+              </div>
+            </li> 
+          </ul> 
+              <div class="modal-footer text-center">
+                  <div class="text-center">
+                    <button type="button" class="btn bluebtn" ng-click="saveDependents(form)">Update</button>
+                    <button type="button" class="btn bluebtn" data-dismiss="modal" ng-click="closemodal(); cls();">Close</button>
+                  </div>
+                </div> 
+          </form>
+         
+                </div>
+             </div>
+      </div>
+   </div>
+
+   <div class="popupbg"></div>
+
+     </div>

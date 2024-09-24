@@ -1,0 +1,426 @@
+
+    <div ng-controller="accounts">
+  <div class="titles">Pensioner Account Form </div>  
+<form  name="acoount"> 
+    <div class="formsec">    
+        <ul class="formshow list3">
+            <li>
+                <div class="form-group">
+                  <label class="required">Pensioner Id </label>
+                  <select class="form-control dropdd" data-live-search="true" ng-options="pensioner.pensioner_id as pensioner.pensioner_id + ' - ' + pensioner.pensioner_name for pensioner in allPensionersData" name="pensionerId" required ng-model="form.pensionerId" 
+                  ng-change="payDataById(form.pensionerId)">
+                    <option value="" selected>Select Pensioner Id</option>
+                    </select>
+                </div>
+                <div class="error" ng-show="acoount.pensionerId.$error.required && acoount.$submitted && !formSubmitted" style="color: red;">
+                  This field is required.
+                </div>
+            </li>
+
+            <li ng-if="form.employeeName">
+              <div class="form-group" >
+                <label class="required">Employee Name </label>
+                <input type="text" class="form-control"  placeholder="Employee name" name="employeeName"  ng-model="form.employeeName"  disabled/>
+              </div>
+          </li>  
+        <li ng-if="form.payCommissionCode">
+          <div class="form-group" ng-if="form.payCommissionCode">
+            <label class="required">PayCommision Code</label>
+            <select class="form-control" ng-model="form.payCommissionCode" name="payCommissionCode" data-live-search="true"  ng-options="x.payCommissionCode as x.dscr for x in payCommisionData" disabled>
+          </select>
+          </div>
+        </li>
+      <li ng-if="form.aadhaar">
+        <div class="form-group" >
+          <label class="required">Aadhar No.</label>
+          <input type="text" class="form-control"  placeholder="Aadhar No." name="aadhaar"  ng-model="form.aadhaar"  disabled/>
+        </div>
+    </li>
+    <li ng-if="form.pensionerId">
+      <div class="form-group" >
+        <label class="">Pan No</label>
+        <input type="text" class="form-control"  placeholder="Pan No." name="pan"  ng-model="form.pan" disabled />
+      </div>
+    </li>
+    <li ng-if="form.pensionerStatusCode || form.pensionerStatusCode=='0' ">
+      <div class="form-group">
+        <label class="required">Pensioner Status code</label>
+        <select class="form-control" ng-model="form.pensionerStatusCode" name="pensionerStatusCode"
+          data-live-search="true" ng-options="x.pensionerStatusCode as x.dscr for x in pensionerStatusData"
+          disabled>
+        </select>
+      </div>
+    </li>
+<li ng-if="form.collegeCode">
+  <div class="form-group" ng-if="form.collegeCode">
+    <label class="required">College</label>
+    <select class="form-control" ng-model="form.collegeCode" name="collegeCode" data-live-search="true" title="Select College" ng-options="x.collegeShortName as x.dscr for x in clgs" disabled>
+      <option value="" disabled selected>Select College</option>
+  </select>
+  
+  </div>
+</li>
+<li ng-if="form.departmentCode">
+  <div class="form-group" ng-if="form.departmentCode">
+    <label class="required">Department</label>
+    <select class="form-control" ng-model="form.departmentCode" name="departmentCode" data-live-search="true" title="Select department" ng-options="x.deptShortName as x.dscr for x in depts" disabled>
+      <option value="" disabled selected>Select College</option>
+  </select>
+  
+  </div>
+</li>
+ 
+            <li>
+              <div class="form-group">
+                <label class="required">Account Effective From </label>
+                <input type="text" class="datepicker form-control"  datepicker placeholder="Account Effective From" name="accountEffectiveFrom" required ng-model="form.accountEffectiveFrom"
+                 ng-disabled="flag" ng-change="chkDate(form.pensionerId,form.accountEffectiveFrom)" />
+              </div>
+              <div class="error" ng-show="acoount.accountEffectiveFrom.$error.required && acoount.$submitted && !formSubmitted" style="color: red;">
+                This field is required.
+              </div>
+              <div class="error" ng-show="pcode"  style="color: red;">
+                Can't add a month again that's already been added.
+               </div>
+          </li>  
+          <li>
+            <div class="form-group">
+              <label class="required">Bank Name</label>
+              <select class="form-control" ng-model="form.bankCode" name="bankCode" title="Select Bank Name" required>
+                <option value="" disabled selected>Select Bank Name</option>
+                <option ng-value="x.bankCode" ng-repeat="x in banks">{{x.bankName}}</option>
+              </select>
+            </div>
+            <div class="error" ng-show="account.bankCode.$error.required && account.$submitted && !formSubmitted" style="color: red;">
+              This field is required.
+            </div>
+          </li>
+          <li>
+            <div class="form-group">
+              <label class="required">Account No. </label>
+              <input type="text" class=" form-control"  placeholder="Account no." name="accountNo" required ng-model="form.accountNo" ng-pattern="/^[0-9]+$/" maxlength="20"  />
+            </div>
+            <div class="error" ng-show="acoount.accountNo.$error.required && acoount.$submitted && !formSubmitted" style="color: red;">
+              This field is required.
+            </div>
+            <div class="error" ng-show="acoount.accountNo.$error.pattern" style="color: red;">
+              Please enter only numeric Only.
+          </div>
+        </li>  
+        <li>
+          <div class="form-group">
+            <label class="required">IFSC Code </label>
+            <input type="text" class=" form-control"  placeholder="IFSC Code" name="ifscCode" required  ng-pattern="/^[A-Z]{4}\d{7}$/" ng-model="form.ifscCode" maxlength="11" />
+          </div>
+          <div class="error" ng-show="acoount.ifscCode.$error.required && acoount.$submitted && !formSubmitted" style="color: red;">
+            This field is required.
+          </div>
+          <div class="error" ng-show="acoount.ifscCode.$error.pattern" style="color: red;">
+            Please enter Correct Format of Ifc Code.
+        </div>
+      </li> 
+      <li>
+        <div class="form-group">
+          <label class="">Branch Name</label>
+          <input type="text" class=" form-control"  placeholder="Branch Name" name="branchName" ng-pattern="/^[a-zA-Z0-9 ]+$/" ng-model="form.branchName" maxlength="30" />
+        </div>
+        <div class="error" ng-show="acoount.branchName.$error.pattern" style="color: red;">
+          Please enter only alphanumeric Only.
+      </div>
+    </li>
+    <li>
+      <div class="form-group">
+        <label class="required">Branch City</label>
+        <input type="text" class=" form-control"  placeholder="City Name" name="branchCity" ng-pattern="/^[a-zA-Z0-9 ]+$/" required ng-model="form.branchCity" maxlength="30" />
+      </div>
+      <div class="error" ng-show="acoount.branchCity.$error.required && acoount.$submitted && !formSubmitted" style="color: red;">
+        This field is required.
+      </div>
+      <div class="error" ng-show="acoount.branchCity.$error.pattern" style="color: red;">
+        Please enter only alphanumeric Only.
+    </div>
+  </li>
+  <li>
+    <div class="form-group">
+      <label class="required">State</label>
+      <input type="text" class=" form-control"  placeholder="State" name="state" required ng-pattern="/^[a-zA-Z ]+$/" ng-model="form.state" maxlength="20" />
+    </div>
+    <div class="error" ng-show="acoount.state.$error.required && acoount.$submitted && !formSubmitted" style="color: red;">
+      This field is required.
+    </div>
+    <div class="error" ng-show="acoount.state.$error.pattern" style="color: red;">
+      Please enter only alphabeticlly Only.
+  </div>
+</li>
+<li>
+  <div class="form-group">
+    <label class="required">Remarks</label>
+    <input type="text" class=" form-control"  placeholder="Remarks" name="remarks" required  ng-model="form.remarks" maxlength="200" />
+  </div>
+  <div class="error" ng-show="acoount.remarks.$error.required && acoount.$submitted && !formSubmitted" style="color: red;">
+    This field is required.
+  </div>
+</li>
+
+  
+       </ul> 
+        <div> <button type="button" class="btn bluebtn" ng-disabled="acoount.$invalid || pcode"  ng-click="saveacoount(form)">Submit</button></div>
+    </div>
+    <div ng-show="showSuccess" class="success-message">Data Posted Successfully!</div>
+    <div ng-show="showDelete" class="delete-message">Delete Data Successfully!</div>
+
+
+  </form>
+
+     <!-- data List -->
+        <div>
+          <div class="titles lists" data-aos="fade-up" data-aos-duration="1000">Data List </div>   
+          <div class="tabletop fcs">
+                 <!-- <div><button class="btn bluebtn" data-toggle="modal" id="exportToExcel" data-backdrop="static" data-keyboard="false"><i class="fa fa-download"></i> Download</button></div> -->
+                 <!-- <div class="searchfield"><input class="form-control" type="text" value="" placeholder="Search" ng-model="searchId" value="" placeholder="Search By Id" /></div> -->
+               </div>
+         <div class="tablesec">
+                 <table class="table table-striped">
+                   <thead>
+                     <tr>
+                       <th width="140">Pensioner Id</th>
+                       <th width="120">Bank Name</th>
+                       <th width="120">Account Effective From </th>
+                       <th width="120">Account Effective To</th>
+                       <th width="120">Account No.</th>
+                       <th width="120">IFSC Code</th>
+                       <th width="120">Branch Name</th>
+                       <th width="120">Branch City</th>
+                       <th width="120">Remarks</th>
+                       <th width="120">Action</th>
+                     </tr>
+                   </thead>
+         
+                   <tbody>
+                     <tr ng-repeat="x in paydetialData | orderBy:'-accountEffectiveFrom'">
+                       <td>{{x.pensionerId}}</td>
+                       <td ng-bind="getBankName(x.bankCode) | uppercase"></td>
+                       <td>{{x.accountEffectiveFrom}}</td>
+                       <td>{{x.accountEffectiveTo}}</td>
+                       <td>{{x.accountNo}}</td>
+                       <td>{{x.ifscCode}}</td>
+                       <td>{{x.branchName | uppercase}}</td>
+                       <td>{{x.branchCity | uppercase}}</td>
+                       <td>{{x.remarks}}</td>
+
+                       <td> 
+                        <button class="btn editbtn" data-toggle="modal" data-placement="top" data-target="#editpensioner"
+                        title="Edit" ng-click="editData(x);payDataById(x.pensionerId);" ng-disabled="x.status === 1"><i class="fa fa-pencil"></i></button>                        
+                        <!-- <button class="btn editbtn" data-toggle="modal" data-placement="top" title="Edit" ng-click="editData(x); payDataById(x.pensionerId);" ><i class="fa fa-pencil"></i></button> -->
+                        <!-- <button class="btn viewbtn" data-toggle="modal" data-placement="top" title="View"><i class="fa fa-eye"></i></button> -->
+                        <!-- <button class="btn deletebtn" data-toggle="modal" data-placement="top" title="Delete"><i class="fa fa-trash" ng-click="DeleteData(x.pensionerId,x.bankCode,$index)"></i></button>  -->
+                        <button class="btn deletebtn" data-toggle="modal" data-target="#deleteModal" data-placement="top" ng-click="setDeleteData(x)"
+                        title="Delete" ng-disabled="x.status === 1" > <i class="fa fa-trash" ></i>  </button>
+                      </td>
+
+
+                      <div class="modal fade" id="deleteModal" role="dialog" data-backdrop="static">
+                        <div class="modal-dialog modal-sm">
+                          <div class="modal-content">
+                            <div class="modal-body">
+                              <div class="formsec nobg">
+                                <h4 class="modal-title text-center"> Are you sure, you want to delete this data?</h4>                     
+                                </div>
+                                <div class="text-center">
+                                  <button type="button" class="btn bluebtn " style="padding: 5px;width:70px;color: beige;" data-dismiss="modal">Cancel</button>
+                                  <button type="button" class="btn bluebtn" style="padding: 5px;width:70px;color: beige;"
+                                  ng-click="DeleteData(deleteDataModel.pensionerId,deleteDataModel.bankCode,$index)">Delete</button>
+                                </div>
+                            </div>                 
+                          </div>
+                        </div>
+                      </div>
+
+
+                     </tr>                   
+                   </tbody>
+                 </table>
+               </div>
+        </div>
+<!-- data list End -->
+
+<div class="modal fade" id="editpensioner" data-backdrop="static">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" ng-click="closemodal();cls();">&times;</button>
+        <h4 class="modal-title text-center">Edit Pensioner Account</h4>
+      </div>
+      <div class="modal-body">
+          <form class="formsec" name="my">
+            <ul class="formshow list3">
+              <li>
+                  <div class="form-group">
+                    <label class="required">Pensioner Id </label>
+                    <select class="form-control" ng-options="pensioner.pensioner_id as pensioner.pensioner_id + ' - ' + pensioner.pensioner_name for pensioner in allPensionersData" name="pensionerId"  ng-model="form.pensionerId" ng-disabled="flag" 
+                       ng-change="payDataById(form.pensionerId)">
+                      <option value=""  selected>Select Pensioner Id</option>
+                      </select>
+                  </div>
+                  <div class="error" ng-show="my.pensionerId.$error.required && my.$submitted && !formSubmitted" style="color: red;">
+                    This field is required.
+                  </div>
+              </li>
+  
+              <li ng-if="form.employeeName">
+                <div class="form-group" >
+                  <label class="required">Employee Name </label>
+                  <input type="text" class="form-control"  placeholder="Employee name" name="employeeName"  ng-model="form.employeeName"  disabled/>
+                </div>
+            </li>  
+          <li ng-if="form.payCommissionCode">
+            <div class="form-group" ng-if="form.payCommissionCode">
+              <label class="required">PayCommision Code</label>
+              <select class="form-control" ng-model="form.payCommissionCode" name="payCommissionCode" data-live-search="true"  ng-options="x.payCommissionCode as x.dscr for x in payCommisionData" disabled>
+            </select>
+            </div>
+          </li>
+        <li ng-if="form.aadhaar">
+          <div class="form-group" >
+            <label class="required">Aadhar No.</label>
+            <input type="text" class="form-control"  placeholder="Aadhar No." name="aadhaar"  ng-model="form.aadhaar"  disabled/>
+          </div>
+      </li>
+      <li ng-if="form.pan">
+        <div class="form-group" >
+          <label class="">Pan No</label>
+          <input type="text" class="form-control"  placeholder="Pan No." name="pan"  ng-model="form.pan" disabled />
+        </div>
+      </li>
+      <li ng-if="form.pensionerStatusCode || form.pensionerStatusCode=='0' ">
+        <div class="form-group">
+          <label class="required">Pensioner Status code</label>
+          <select class="form-control" ng-model="form.pensionerStatusCode" name="pensionerStatusCode"
+            data-live-search="true" ng-options="x.pensionerStatusCode as x.dscr for x in pensionerStatusData"
+            disabled>
+          </select>
+        </div>
+      </li>
+      <li ng-if="form.collegeCode">
+        <div class="form-group" ng-if="form.collegeCode">
+          <label class="required">College</label>
+          <select class="form-control" ng-model="form.collegeCode" name="collegeCode" data-live-search="true" title="Select College" ng-options="x.collegeShortName as x.dscr for x in clgs" disabled>
+            <option value="" disabled selected>Select College</option>
+        </select>
+        
+        </div>
+      </li>
+      <li ng-if="form.departmentCode">
+        <div class="form-group" ng-if="form.departmentCode">
+          <label class="required">Department</label>
+          <select class="form-control" ng-model="form.departmentCode" name="departmentCode" data-live-search="true" title="Select department" ng-options="x.deptShortName as x.dscr for x in depts" disabled>
+            <option value="" disabled selected>Select College</option>
+        </select>
+        
+        </div>
+      </li>
+   
+              <li>
+                <div class="form-group">
+                  <label class="required">Account Effective From </label>
+                  <input type="text" class="datepicker form-control"  datepicker placeholder="Account Effective From" name="accountEffectiveFrom" required ng-model="form.accountEffectiveFrom" ng-disabled="flag"  />
+                </div>
+                <div class="error" ng-show="my.accountEffectiveFrom.$error.required && my.$submitted && !formSubmitted" style="color: red;">
+                  This field is required.
+                </div>
+            </li>  
+          <li>
+            <div class="form-group">
+              <label class="required">Bank Name </label>
+              <select class="form-control" ng-model="form.bankCode" name="bankName"  title="Select Bank Name"  required ng-options="x.bankCode as x.bankName for x in banks" ng-disabled="flag">
+                <option value="" disabled selected>Select Bank Name</option>
+            </select>
+            </div>
+            <div class="error" ng-show="my.bankName.$error.required && my.$submitted && !formSubmitted" style="color: red;">
+              This field is required.
+            </div>
+  
+        </li> 
+            <li>
+              <div class="form-group">
+                <label class="required">Account No. </label>
+                <input type="text" class=" form-control"  placeholder="Account no." name="accountNo" required ng-model="form.accountNo" ng-pattern="/^[0-9]+$/" maxlength="20"  ng-disabled="flag"/>
+              </div>
+              <div class="error" ng-show="my.accountNo.$error.required && my.$submitted && !formSubmitted" style="color: red;">
+                This field is required.
+              </div>
+              <div class="error" ng-show="my.accountNo.$error.pattern" style="color: red;">
+                Please enter only numeric Only.
+            </div>
+          </li>  
+          <li>
+            <div class="form-group">
+              <label class="required">IFSC Code </label>
+              <input type="text" class=" form-control"  placeholder="IFSC Code" name="ifscCode" required ng-pattern="/^[A-Z]{4}\d{7}$/" ng-model="form.ifscCode" maxlength="11" ng-disabled="flag"/>
+            </div>
+            <div class="error" ng-show="my.ifscCode.$error.required && my.$submitted && !formSubmitted" style="color: red;">
+              This field is required.
+            </div>
+            <div class="error" ng-show="my.ifscCode.$error.pattern" style="color: red;">
+              Please enter only alphanumeric Only.
+          </div>
+        </li> 
+        <li>
+          <div class="form-group">
+            <label class="">Branch Name</label>
+            <input type="text" class=" form-control"  placeholder="Branch Name" name="branchName" ng-pattern="/^[a-zA-Z0-9 ]+$/" ng-model="form.branchName" maxlength="30" />
+          </div>
+          <div class="error" ng-show="my.branchName.$error.pattern" style="color: red;">
+            Please enter only alphanumeric Only.
+        </div>
+      </li>
+      <li>
+        <div class="form-group">
+          <label class="required">Branch City</label>
+          <input type="text" class=" form-control"  placeholder="City Name" name="branchCity" ng-pattern="/^[a-zA-Z0-9 ]+$/" required ng-model="form.branchCity" maxlength="30" />
+        </div>
+        <div class="error" ng-show="my.branchCity.$error.required && my.$submitted && !formSubmitted" style="color: red;">
+          This field is required.
+        </div>
+        <div class="error" ng-show="my.branchCity.$error.pattern" style="color: red;">
+          Please enter only alphanumeric Only.
+      </div>
+    </li>
+    <li>
+      <div class="form-group">
+        <label class="required">State</label>
+        <input type="text" class=" form-control"  placeholder="State" name="state" required ng-pattern="/^[a-zA-Z ]+$/" ng-model="form.state" maxlength="20" />
+      </div>
+      <div class="error" ng-show="my.state.$error.required && my.$submitted && !formSubmitted" style="color: red;">
+        This field is required.
+      </div>
+      <div class="error" ng-show="my.state.$error.pattern" style="color: red;">
+        Please enter only alphabeticlly Only.
+    </div>
+  </li>
+  <li>
+    <div class="form-group">
+      <label class="required">Remarks</label>
+      <input type="text" class=" form-control"  placeholder="Remarks" name="remarks" required  ng-model="form.remarks" maxlength="200" />
+    </div>
+    <div class="error" ng-show="my.remarks.$error.required && my.$submitted && !formSubmitted" style="color: red;">
+      This field is required.
+    </div>
+  </li>
+    
+         </ul>
+              <div class="modal-footer text-center">
+                  <div class="text-center">
+                    <button type="button" class="btn bluebtn" ng-click="updateAccount(form)" ng-disabled="my.$invalid || pcode">Update</button>
+                    <button type="button" class="btn bluebtn" data-dismiss="modal" ng-click="closemodal(); cls();">Close</button>
+                  </div>
+                </div> 
+          </form>
+         
+                </div>
+             </div>
+      </div>
+   </div>
+   <div class="popupbg"></div>
+</div>
+  

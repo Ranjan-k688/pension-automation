@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>RU Pension</title>
+	<link rel="shortcut icon" href="images/ru_logo.png" type="image/x-icon">
+	<link rel="icon" href="images/ru_logo.png" type="image/x-icon"> 
+	<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+	<link rel="stylesheet" href="css/style.css">
+	<link href="css/font-awesome.min.css" rel="stylesheet" /> 
+	<link rel="stylesheet" href="../css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/bootstrap-select.min.css"> 
+	<link rel="stylesheet" href="css/bootstrap-datepicker.min.css">
+	<link rel="stylesheet" href="css/toastr.min.css">
+	<link rel="stylesheet" href="css/style.css"> 
+	<link rel="stylesheet" href="css/aos.css">
+	<script src="js/angular.min.js"></script>
+	<script src="js/angular-route.js"></script>
+	<script src="js/jquery.min.js"></script>
+	<script src="js/bootstrap.min.js"></script> 
+	<script src="js/bootstrap-select.min.js"></script> 
+	<script src="js/bootstrap-datepicker.min.js"></script>
+	<script src="js/aos.js"></script>
+	<script src="js/toastr.min.js"></script>
+	<script src="js/jquery.table2excel.js"></script>
+	<script src="js/path.js"></script>
+	<script src="js/main.js"></script>
+	<script src="app/app.js"></script>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.4/xlsx.full.min.js"></script>
+
+
+
+
+<style>
+*{box-sizing: border-box; margin: 0; padding:0;} 
+
+.loginsec{display: flex; flex-wrap: wrap; justify-content: space-between; width:700px; position: absolute; left:50%; top:50%; transform:translate(-50%, -50%); font-size: 13px; border-radius: 5px; overflow: hidden;} 
+.loginsec h1{font-size: 30px; font-weight: 600;text-align: center;}
+.half{height: 400px; padding:50px; width: 50%; background:rgba(6, 60, 167, 0.8); color: var(--white);backdrop-filter: blur(7px);}
+.bgsec {background:rgba(255, 255, 255, 0.4) ; display: flex;  align-items: center;  justify-content: center; text-align: center;}
+.trtext{font-size: 40px; font-weight: bold; }
+.formsec{background: none; padding-top: 0px;}
+.formsec input:focus{outline: none;}
+.formsec input, .formsec button, .btnlogin{ width:100%; border:none; line-height: 24px; background:var(--white); display: inline-block;  margin-bottom:10px; padding: 10px 20px; border-radius: 4px;color:var(--dark-blue);}
+.btnlogin{ background:var(--light-theme);  text-align:center; text-transform:uppercase; font-size:16px; font-weight:600; }
+.forgot{margin-top: 10px; color: var(--light-theme); display: inline-block; text-decoration: underline;}
+
+.loglogo { font-size: 22px; font-weight: bold; line-height: 1.2; color: #0707c7; padding: 4px 0;}
+.loglogo img{max-width: 150px;}
+.loglogo div, .loglogo div span{display: block;}
+
+@media (max-width:767px) {
+.loginsec{ width:320px;  }
+.half{height: auto; padding:30px; width:100%;}
+.trtext{font-size: 24px;}
+}
+
+  </style>
+
+
+
+</head>
+
+<body class="login" ng-app="app" ng-controller="login">
+	<!-- <div ng-view></div> -->
+	<div class="loginsec">
+		<div class="half bgsec">
+			<div class="loglogo">
+				<img src="images/ru_logo.png" alt="RU">
+				<div>
+				<u>राँची विश्‍वविद्यालय</u><span>Ranchi University</span><span>Pension Portal</span>
+				</div>
+			</div>
+		</div>
+		<div class="half">
+			<div class="formsec">
+				<form>
+					<h1>Login</h1> 
+						<label>User Name</label>
+						<input type="text" name="" value="" placeholder="User Name" class="user" ng-model="login.username"/>
+						<label>Password</label>
+						<input type="password" name="" value="" placeholder="Password" class="password" ng-model="login.password"/>
+						<button class="btnlogin" type="submit" id="admin" ng-click="login()">Login</button>
+						<!-- <a  class="btnlogin" id="eval"  href="#!/dashboard">Login</a> -->
+					</form>
+			</div>
+		</div>
+		</div>
+
+<script>
+	var app = angular.module('app', []);
+	app.controller('login', function ($scope,$http, $location, $timeout,$window,) {
+		if(sessionStorage.getItem('token')!='' && sessionStorage.getItem('token')!=null){
+            //$window.sessionStorage.getItem('token');
+            $window.location.href="landingpage.html";
+        }
+		$scope.login={};
+    $scope.login = function () {
+		if($scope.login.username!==undefined && $scope.login.password!==undefined){
+		$scope.loginData = {
+				username: $scope.login.username,
+				password: $scope.login.password,
+				status: 'WEB'
+			};
+
+		var req = {
+					method: 'POST',
+					url: path+'/api/v1/authenticate',
+					data: $scope.loginData,
+					headers: {
+							'Content-Type': 'application/json'
+						}
+					};
+            $http(req).then(function(res){
+		        $scope.rolelist=[];
+            if ((res.data.token!=null || res.data.token!='') && res.data.token!==undefined) {
+				$window.sessionStorage.setItem("token",res.data.token);
+				const map=new Map();
+				for (var j = 0; j < res.data.data.userFullInfo.roleMasters.length; j++) {
+								$scope.rolelist[j]=res.data.data.userFullInfo.roleMasters[j].roleCode;
+							}
+				for(let i=0;i<res.data.data.roles.length;i++){
+					// rolesPages.add(res.data.data.roles[i].pageName);
+					// rolesPagesIcon.add(res.data.data.roles[i].iconName);
+                    if(map.has(res.data.data.roles[i].pageName)){
+
+					}
+					else{
+						$scope.linkIconLable={};
+						$scope.linkIconLable.link=res.data.data.roles[i].pageName;
+						$scope.linkIconLable.icon=res.data.data.roles[i].iconName;
+						$scope.linkIconLable.label=res.data.data.roles[i].desc;
+						$scope.linkIconLable.menuLabel=res.data.data.roles[i].menuLabel;
+						$scope.linkIconLable.seq_no=res.data.data.roles[i].seq_no;
+						map.set(res.data.data.roles[i].pageName,$scope.linkIconLable);
+					
+					}
+					
+
+				}
+				// console.log("Maapppp",map);
+				$window.sessionStorage.setItem("userFullName",res.data.data.userFullInfo.userFullName);
+				$window.sessionStorage.setItem("profile_image",res.data.data.userFullInfo.profile_image_name);
+				$window.sessionStorage.setItem("emailId",res.data.data.userFullInfo.emailId);
+				$window.sessionStorage.setItem("mobileNo",res.data.data.userFullInfo.mobileNo);
+				$window.sessionStorage.setItem("rolelist",$scope.rolelist);
+				$window.sessionStorage.setItem("appuserId",res.data.data.userFullInfo.userId);
+				$window.sessionStorage.setItem("roles", JSON.stringify(Array.from(map.entries())));
+				const storedData = $window.sessionStorage.getItem("roles");
+
+				// Parse the stored string to an array of entries
+				const storedEntries = JSON.parse(storedData);
+
+				// Convert the array of entries back to a Map
+				const retrievedMap = new Map(storedEntries);
+
+				// console.log("Retrieved Maapppp", retrievedMap);
+				var url = 'landingpage.html';
+                $window.location.href = url;
+
+            }
+
+            else {
+				alert("Wrong Username or Password!!");
+            }
+
+            },
+            function (err) { 
+				if(err.status===-1){
+					toastr["error"]("Server Unreachable!!");
+					alert("Server Unreachable!!");
+				}
+				else{
+					toastr["error"]("Something Went Wrong!!"); 
+				}
+				        
+            });
+		}
+		else{
+			alert("Please Enter username or password!!");
+		}
+    };
+
+
+});
+</script>
+</body>
+
+</html>

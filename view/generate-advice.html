@@ -1,0 +1,78 @@
+
+    <div ng-controller="bankAdvice">
+  <div class="titles">Generate Advice For Bank</div>  
+<form  name="generateAdvice"> 
+    <div class="formsec">    
+      <ul class="formshow list4">
+        <li>
+          <div class="form-group">
+            <label class="required">Select Bank</label>
+           <select class="form-control" name="bank" required ng-model="form.bank">
+              <option value=""  selected>Select Bank</option>
+              <option value="{{x.bank_code}}" ng-repeat="x in banklist | orderBy:['bank_name'] | unique:'bank_code'">{{x.bank_name}}</option>
+              </select>
+          
+          </div>
+          <div class="error" ng-show="generateAdvice.bank.$error.required && generateAdvice.bank.$touched && !formSubmitted" style="color: red;">
+            This field is required.
+          </div>
+      </li> 
+          <li>
+              <div class="form-group">
+                <label class="required">Select Year</label>
+                <input type="text" class="datepicker form-control" autocomplete="off" year-picker placeholder="Select Year" name="year" required ng-model="form.year" maxlength="15" ng-disabled="flag"/>
+              </div>
+              <div class="error" ng-show="generateAdvice.year.$error.required && generateAdvice.year.$touched && !formSubmitted" style="color: red;">
+                This field is required.
+              </div>
+              <div class="error" ng-show="generateAdvice.pensionerId.$error.maxlength"  style="color: red;">
+                Only  15 characters are allowed.
+            </div>
+          </li>
+          <li>
+              <div class="form-group">
+                <label class="required">Select Month</label>
+                <select class="form-control" name="month" required ng-model="form.month" ng-disabled="flag">
+                  <option value="" selected>Select Month</option>
+                  <option ng-repeat="month in availableMonths" value="{{month.value}}">{{month.name}}</option>
+                </select>
+              
+              
+              </div>
+              <div class="error" ng-show="generateAdvice.month.$error.required && generateAdvice.month.$touched && !formSubmitted" style="color: red;">
+                This field is required.
+              </div>
+          </li>  
+          <li>
+            <label></label>
+            <div class="form-group"><div class="text-center">
+               <button type="button" class="btn bluebtn" ng-click="generate_advice(form)" ng-disabled="generateAdvice.$invalid">Click here to generate</button>
+              </div></div>
+            </li>  
+      </ul> 
+    </div>
+
+
+  </form>
+
+
+        <div style="background: #70d056;color: #010101;padding: 30px 0px;border-radius: 2px;margin-top: 50px;font-size: 20px;" ng-if="showmessage">
+                 <div class="text-center"><lable>Advice SlNo. {{adviceSlno}} dated {{adviceDate}} generated for month of <strong>{{getMonthName(form.month)}} - {{form.year}}</strong> for bank - <strong>{{form.bank}}</strong></lable></div>
+        </div>
+
+
+        <div ng-if="showmessage" style="margin-top: 15px;">
+                 <div class="text-center" ><button class="btn bluebtn" data-toggle="modal" id="exportToExcel" data-backdrop="static" data-keyboard="false" ng-click="(handleLink('bank-advice'))">Click To Download Advice</button></div>
+ 
+        </div>
+
+
+     </div>
+     <div class="loaderbg generateload" >
+      <div class="loading">
+        Generating
+      <span class="loading-dots">.</span>
+      <span class="loading-dots">.</span>
+      <span class="loading-dots">.</span>
+    </div>
+    </div>

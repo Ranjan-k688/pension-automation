@@ -1,0 +1,167 @@
+
+            <div ng-controller="pensionerstatuslst">
+                <div class="titles">Data List </div>
+
+
+
+                <div class="tabletop fcs" style="flex-direction: row-reverse;">
+                    <!-- <div><button class="btn bluebtn" data-toggle="modal" data-target="#modalcompanydoc"
+                            data-backdrop="static" data-keyboard="false"><i class="fa fa-download"></i>
+                            Download</button></div> -->
+
+                    <!-- <div class="searchfield"><input class="form-control" type="text" value="" placeholder="Search" />
+                    </div> -->
+                    <div><button class="btn bluebtn mybtn"  ng-click="add()" data-backdrop="static"
+                            data-keyboard="false">
+                            Add</button></div>
+                </div>
+                <div class="tablesec table-responsive">
+                    <!-- <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Pensioner Status Code</th>
+                                <th>Description</th>
+                                <th>Pensioner ID</th>
+                                <th>Aadhaar</th>
+                                <th>College Code</th>
+                                <th>Date of Birth</th>
+                                <th>Date of Death</th>
+                                <th>Date of Last Appointment</th>
+                                <th>Date of Regularisation</th>
+                                <th>Date of Separation</th>
+                                <th>Department Code</th>
+                                <th>Designation Short Name</th>
+                                <th>Employee Name</th>
+                                <th>Father Name</th>
+                                <th>Grade Code</th>
+                                <th>Inserted On</th>
+                                <th>Mobile Number</th>
+                                <th>PAN</th>
+                                <th>PAN Record</th>
+                                <th>Pay Commission Code</th>
+                                <th>Pensioner Name</th>
+                                <th>Pensioner Relation</th>
+                                <th>Pensioner Type Code</th>
+                                <th>Pensioner University ID</th>
+                                <th>PPO Number</th>
+                                <th>Prefix</th>
+                                <th>Rate of Pension</th>
+                                <th>Remarks</th>
+                                <th>RU Serial Number</th>
+                                <th>Sex</th>
+                                <th>Status From Date</th>
+                                <th>Subject Code</th>
+                                <th>University Code</th>
+                                <th>Updated On</th>
+                                <th>User ID Checker</th>
+                                <th>User ID Maker</th>
+                                <th>User ID Updater</th>
+                                <th>Verified On</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="data in pensionStatusData">
+                                <td ng-bind="data.pensionerStatusCode"></td>
+                                <td ng-bind="data.dscr"></td>
+                                <td ng-bind="data.pensionerId"></td>
+                                <td ng-bind="data.aadhaar"></td>
+                                <td ng-bind="data.collegeCode"></td>
+                                <td ng-bind="data.dateOfBirth"></td>
+                                <td ng-bind="data.dateOfDeath"></td>
+                                <td ng-bind="data.dateOfLastAppointment"></td>
+                                <td ng-bind="data.dateOfRegularisation"></td>
+                                <td ng-bind="data.dateOfSeparation"></td>
+                                <td ng-bind="data.departmentCode"></td>
+                                <td ng-bind="data.desigShortName"></td>
+                                <td ng-bind="data.employeeName"></td>
+                                <td ng-bind="data.fatherName"></td>
+                                <td ng-bind="data.gradeCode"></td>
+                                <td ng-bind="data.insertedOn"></td>
+                                <td ng-bind="data.mobileNo"></td>
+                                <td ng-bind="data.pan"></td>
+                                <td ng-bind="data.panRecord"></td>
+                                <td ng-bind="data.payCommissionCode"></td>
+                                <td ng-bind="data.pensionerName"></td>
+                                <td ng-bind="data.pensionerRelation"></td>
+                                <td ng-bind="data.pensionerTypeCode"></td>
+                                <td ng-bind="data.pensionerUnivId"></td>
+                                <td ng-bind="data.ppoNo"></td>
+                                <td ng-bind="data.prefix"></td>
+                                <td ng-bind="data.rateOfPension"></td>
+                                <td ng-bind="data.remarks"></td>
+                                <td ng-bind="data.ruSlno"></td>
+                                <td ng-bind="data.sex"></td>
+                                <td ng-bind="data.statusFromDate"></td>
+                                <td ng-bind="data.subjectCode"></td>
+                                <td ng-bind="data.universityCode"></td>
+                                <td ng-bind="data.updatedOn"></td>
+                                <td ng-bind="data.userIdChecker"></td>
+                                <td ng-bind="data.userIdMaker"></td>
+                                <td ng-bind="data.userIdUpdater"></td>
+                                <td ng-bind="data.verifiedOn"></td>
+                            </tr>
+                        </tbody>
+                    </table> -->
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Employee Name</th>
+                                <!-- <th>Mobile Number</th>
+                                <th>Date of Birth</th>
+                                <th>Date of Death</th> -->
+                                <th>Department Code</th>
+                                <th>Designation Short Name</th>
+                                <th>Grade Code</th>
+                                <th>Sex</th>
+                                <th>Pensioner Status Code</th>
+                                <th>Pensioner ID</th>
+                                <th>Rate of Pension</th>
+                                <th>Action</th>
+                                <!-- Add more headers as needed -->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="data in pensionStatusData">
+                                <td ng-bind="data.employeeName"></td>
+                                <!-- <td ng-bind="data.mobileNo"></td>
+                                <td ng-bind="data.dateOfBirth"></td>
+                                <td ng-bind="data.dateOfDeath"></td> -->
+                                <td ng-bind="data.departmentCode"></td>
+                                <td ng-bind="data.desigShortName"></td>
+                                <td ng-bind="data.gradeCode"></td>
+                                <td ng-bind="data.sex"></td>
+                                <td ng-bind="data.pensionerStatusCode"></td>
+                                <td ng-bind="data.pensionerId"></td>
+                                <td ng-bind="data.rateOfPension"></td>
+                                <td>
+                                    <button class="btn  editbtn" type="button" data-toggle="modal" data-placement="top"
+                                        title="Edit" ng-click="edit(data.pensionerStatusCode)">
+                                        <i class="fa fa-pencil"></i></button>
+                                    <button class="btn viewbtn" ng-click="view(data.pensionerStatusCode)"
+                                        title="View"><i class="fa fa-eye"></i></button>
+                                    <button class="btn deletebtn" title="Delete"
+                                        ng-click="delete(data.pensionerStatusCode)"><i class="fa fa-trash"></i></button>
+                                </td>
+                                <!-- Add more td elements as needed -->
+                            </tr>
+                        </tbody>
+                    </table>
+
+
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="container" id="detailmodal">
+        <div id="detailmodal-content">
+            <button id="closeBtn" class="close-button" ng-click="closeDetail()">
+                &times;
+            </button>
+            <h2>Purchase Order Detail</h2>
+            <ul class="dtlist">
+                <li ng-repeat="(key, value) in pensionerStatus">
+                    <span>{{ convertCamelToReadable(key) }}</span>: {{ value }}
+                </li>
+            </ul>
+        </div>
+    </section>

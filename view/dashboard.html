@@ -1,0 +1,298 @@
+<style>
+	.sectionlist > ul > li {
+    width: 16.59%;
+    padding: 5px;
+  }
+	.stitle {
+    font-size: 15px;
+    margin-top: 0px;
+	}
+	.heading2 {
+    font-size: 20px;
+	}
+
+.sectionbox .white-box{border: 1px solid #ccc; padding:20px;border-radius: 4px;}
+.sectionbox ul{ display:flex; flex-wrap: wrap;}
+.sectionbox ul li{width:50%; padding:10px}
+</style>
+<div ng-controller="dashboard">
+    <div class="titles">Dashboard </div> 
+  <div class="sectionlist">
+    <ul>
+    <li ng-if="pensionflg">
+      
+      <div class="boxs"  >
+        <!-- <div class="flexspace"> -->
+          <div class="icons"><i class="fa fa-users"></i></div> 
+          <div>
+            <div class="heading2">{{allPensionerData.no_of_active_Pensioner}}</div>
+            <div class="stitle"> Active Pensioners <br>in {{allPensionerData.latest_month_year}}</div>
+            <!-- <div class="pt-3"><a ng-click="handleLink('list_pensioner')" class="btn bluebtn">click here to see <i class="fa fa-arrow-right"></i></a></div> -->
+          </div>
+      </div>
+    
+    </li>
+    <!-- <li ng-if="pensionflg">
+      
+      <div class="boxs"  >
+          <div class="icons"><i class="fa fa-users"></i></div> 
+          <div>
+            <div class="heading2">50</div>
+            <div class="stitle">No. of Inactive Pensioners</div>
+            <div class="pt-3"><a ng-click="handleLink('userId_emp')" class="btn bluebtn">click here to see <i class="fa fa-arrow-right"></i></a></div>
+          </div>
+      </div>
+    
+    </li> -->
+    <li ng-if="pensionflg">
+      
+      <div class="boxs"  >
+        <!-- <div class="flexspace"> -->
+          <div class="icons"><i class="fa fa-users"></i></div> 
+          <div>
+            <div class="heading2">{{allPensionerData.pen_gen_data}}</div>
+            <div class="stitle">Pension Generated <br> in {{allPensionerData.latest_month_year}}</div>
+            <!-- <div class="pt-3"><a ng-click="handleLink('pensioner_report')" class="btn bluebtn">click here to see <i class="fa fa-arrow-right"></i></a></div> -->
+          </div>
+      </div>
+    
+    </li>
+    <li ng-if="pensionflg">
+      
+      <div class="boxs"  >
+        <!-- <div class="flexspace"> -->
+          <div class="icons"><i class="fa fa-users"></i></div> 
+          <div>
+            <div class="heading2">{{allPensionerData.forwarding_stage}}</div>
+            <div class="stitle">Forwarding Stage <br>in {{allPensionerData.latest_month_year}}</div>
+            <!-- <div class="pt-3"><a ng-click="handleLink('monthly-pension')" class="btn bluebtn">click here to see <i class="fa fa-arrow-right"></i></a></div> -->
+          </div>
+      </div>
+    
+    </li>
+    <li ng-if="pensionflg">
+      
+      <div class="boxs"  >
+        <!-- <div class="flexspace"> -->
+          <div class="icons"><i class="fa fa-users"></i></div> 
+          <div>
+            <div class="heading2">{{allPensionerData.due_for_verification}}</div>
+            <div class="stitle">Verification is due <br> in {{allPensionerData.latest_month_year}}</div>
+            <!-- <div class="pt-3"><a ng-click="handleLink('monthly-pension')" class="btn bluebtn">click here to see <i class="fa fa-arrow-right"></i></a></div> -->
+          </div>
+      </div>
+    
+    </li>
+    <li ng-if="pensionflg">
+      
+      <div class="boxs"  >
+        <!-- <div class="flexspace"> -->
+          <div class="icons"><i class="fa fa-users"></i></div> 
+          <div>
+            <div class="heading2">{{allPensionerData.due_for_disburshment}}</div>
+            <div class="stitle">Disbursement is due <br> in {{allPensionerData.latest_month_year}}</div>
+            <!-- <div class="pt-3"><a ng-click="handleLink('monthly-pension')" class="btn bluebtn">click here to see <i class="fa fa-arrow-right"></i></a></div> -->
+          </div>
+      </div>
+    
+    </li>
+    <li ng-if="pensionflg">
+      
+      <div class="boxs"  >
+        <!-- <div class="flexspace"> -->
+          <div class="icons"><i class="fa fa-users"></i></div> 
+          <div>
+            <div class="heading2">{{allPensionerData.disburshed_data}}</div>
+            <div class="stitle">Total Disbursed <br> in {{allPensionerData.latest_month_year}}</div>
+            <!-- <div class="pt-3"><a ng-click="handleLink('monthly-pension')" class="btn bluebtn">click here to see <i class="fa fa-arrow-right"></i></a></div> -->
+          </div>
+      </div>
+    
+    </li>
+    <li ng-if="pensionflg" style="width:25%">
+      <style>
+        .displayst{display: flex;}
+        .displayst li{padding-left:5px;width:50%;text-align:right;}
+        /* .displayst li :nth-child(3){text-align: left;} */
+        .displayst li:nth-child(2){  text-align: left;word-wrap: break-word;}
+        .displayst li span{font-weight: 600;}
+      </style>
+      <div class="boxs"  >
+        <!-- <div class="flexspace"> -->
+          <div class="icons"><i class="fa fa-file-text"></i></div> 
+          <div class="heading2">Life Certificate</div>
+          <div>
+            <div class="stitle">
+              <ul class="displayst">
+                <li>Total Count<span>:</span></li><li>{{allPensionerData.total_no_of_life_to_avail}}</li>
+              </ul>
+              <a ng-click="handleLink('list-life-certificate')" style="color: var(--dark-blue);"><ul class="displayst">
+                <li>Pending<span>:</span></li><li style="color: #df3939;">{{allPensionerData.life_certi_not_submitted}}</li>
+              </ul></a>
+            </div>
+            <!-- <div class="pt-3"><a ng-click="handleLink('monthly-pension')" class="btn bluebtn">click here to see <i class="fa fa-arrow-right"></i></a></div> -->
+          </div>
+      </div>
+    
+    </li>
+
+
+   
+    
+   
+    </ul>
+  </div> 
+
+<div class="sectionbox"> 
+  <div class="charts">
+
+    <ul>
+      <li>
+        <div class="white-box" >
+  
+        <canvas id="chart-line" width="100" height="100" ></canvas>
+        </div>
+    
+        </li>
+      <!-- <li>
+        <div class="white-box">
+         <canvas id="chDonut1" width="100" height="100" ></canvas>
+        </div>
+        <canvas id="chPie"></canvas>
+      </li>  -->
+
+      <li>
+        <div class="white-box">
+          <div style="display: flex; align-items: center;">
+            <label style="width: 90px; margin: 0px;">Select Year</label>
+            <select class="form-control" style="width: 50%;" ng-change="fetchAmountByMonth(amountYr)" ng-model="amountYr"> 
+            <option value="">Select Year</option>
+            <option value="All">Latest Record</option>
+            <!-- <option value="2024" >2024</option>
+            <option value="2023">2023</option>
+            <option value="2022">2022</option> -->
+            <option  ng-repeat="x in amountyear" value="{{x}}">{{x}}</option>
+          </select></div>
+         <canvas id="chLine" width="500" height="500" ></canvas>
+        </div>
+      </li>
+      <li>
+        <div class="white-box">
+
+         <canvas id="chBar" width="100" height="100" ></canvas>
+        </div>
+      </li>
+      <li>
+        <div class="white-box">
+
+         <canvas id="chBar1" width="100" height="100" ></canvas>
+        </div>
+      </li>
+
+
+    </ul>
+  </div> 
+</div>
+
+
+<div>
+    <!-- Trigger the modal with a button -->
+    <!-- <button type="button" class="btn btn-info btn-lg" ng-click="lifeNotSubList();">Open Large Modal</button> -->
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" role="dialog" data-backdrop="static">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" ng-click="closemodal()">&times;</button>
+            <h4 class="modal-title">List of Life Certificate Not Submitted</h4>
+          </div>
+          <div class="modal-body">
+<div class="tablesec scrollbar scrollbarPaddingr scrollbar-primary">
+
+        <table class="table table-striped" id="exportTable" >
+          <thead>
+            <tr >
+              <th width="60">Sl No.</th>
+              <th width="120">Pension ID</th>
+              <th width="200" class="text-center">Name of Pensioner</th>
+              <th width="200" class="text-center">Name of Employee</th>
+              <th class="text-center">Date of Superannuation</th>
+              <th class="text-center">Email</th>
+              <th class="text-center">Mobile</th>
+              <th width="100" class="text-center">Actions</th>
+            </tr>
+          </thead>
+            <style>
+            .tablesec .btn {color:#fff;background: #df3939;}
+            </style>
+          <tbody>
+            <tr ng-repeat="x in lifeCerNotSubList | orderBy:'pensionerId'">
+            <td>{{$index + 1}}</td>
+              <td>{{x.pensionerId}}</td>
+              <td class="text-center">{{x.pensionerName}}</td>
+              <td class="text-center">{{x.employeeName}}</td>
+              <td class="text-center">{{x.dateOfSeparation}}</td>
+              <td class="text-center">{{x.emailId}}</td>
+              <td class="text-center">{{x.mobileNo}}</td>
+              <td class="text-center">
+                <button class="btn"  title="Update"  data-toggle="modal" ng-click="stopPensionConfrim(x.pensionerId);" ng-if="x.userIdChecker!=null && x.verifiedOn!=null">Stop</button>
+                
+                <button class="btn"  ng-if="x.userIdChecker==null && x.verifiedOn==null" ng-disabled=" x.userIdChecker==null && x.verifiedOn==null ">Stopped</button>
+                <!-- <button class="btn editbtn" data-toggle="modal" data-placement="top" title="Edit" data-target="#editpensioner" ng-click="editdata(x.id);"><i class="fa fa-pencil"></i></button> -->
+                <!-- <button class="btn editbtn"  data-placement="top" title="Edit" ng-if="x.status==1" style="background-color: rgb(207 207 207);" ><i class="fa fa-pencil"></i></button> -->
+                <!-- <button class="btn deletebtn" data-toggle="modal" data-placement="top" title="Delete"><i class="fa fa-trash"></i></button>  -->
+              </td>
+            </tr>
+
+           
+          </tbody>
+        </table>
+      </div>
+          </div>
+          <div class="modal-footer">
+            <!-- <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="closemodal()">Close</button> -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+    
+  <div class="modal fade" id="confirmModal" role="dialog" data-backdrop="static">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content">
+        <!-- <div class="modal-header border-o">
+          <h4 class="modal-title text-center">Pensioner Info</h4> 
+          <button type="button" class="close" data-dismiss="modal" ng-click="closemodal()">&times;</button>
+          
+        </div> -->
+        <div class="modal-body">
+          <div class="formsec nobg">
+            <h4 class="modal-title text-center"> Are you sure to Stop Pension ?</h4>
+            <!-- <div class="form-group">
+              <label>Reason for Stop</label>
+              <input type="text" class="form-control" m-name placeholder="Enter Reason" required ng-model="remarks='Life Certiticate Not Submited'" disabled/>
+            </div> 
+            -->
+            </div>
+            <div class="text-center">
+              <button type="button" class="btn bluebtn" ng-click="closemodalConfrim()">Cancel</button>
+              <button type="button" class="btn bluebtn"  ng-click="stopPension('Life Certiticate Not Submited');">Stop</button>
+            </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+
+  
+  </div>
+
+  <div class="popupbg"></div>
+</div>
+</div>
+
+        

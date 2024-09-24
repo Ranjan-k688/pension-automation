@@ -1,0 +1,155 @@
+<div ng-controller="pensionergrade">
+  <div class="titles" data-aos="fade-up" data-aos-duration="1000">Pension Grade Form</div>
+  <form name="penform" class="formsec" novalidate>
+    <ul class="formshow list3">
+      <li class="col-6">
+        <div class="form-group">
+          <label class="required">Pensioner Type Code</label>
+          <select class="form-control" style="width: 100%;" ng-model="form.pensionerTypeCode" name="pensionerTypeCode"  ng-disabled="isIdDisable" required>
+            <option value="" >Select Pensioner Type Code</option>
+            <option ng-repeat="i in pensionerTypeData" value="{{i.pensionerTypeCode}}">{{i.dscr}}</option>
+          </select>
+          <div class="error" style="color: red;" ng-show="penform.pensionerTypeCode.$error.required && penform.pensionerTypeCode.$touched && !formSubmitted">
+            This field is required.
+          </div>
+        </div>
+      </li>
+
+      <li>
+        <div class="form-group">
+          <label for="gradeCode" class="required">Grade Code</label>
+          <input type="text" required class="form-control" no-special-characters maxlength="50" ng-model="form.gradeCode" name="gradeCode"  ng-disabled="isIdDisable"
+            placeholder="Enter Grade Code" />
+          <div class="error" style="width: 100%; color: red;"
+            ng-show="penform.gradeCode.$error.required  &&  penform.gradeCode.$touched && !formSubmitted">
+            This field is required.
+          </div>
+        </div>
+      </li>
+      <li>
+        <div class="form-group">
+          <label for="dscr"  class="required">Pensioner Grade Description</label>
+          <input type="text" class="form-control" maxlength="50" ng-model="form.dscr" name="dscr" placeholder="Pensioner Grade Description"  required/>
+          <div class="error" ng-show="penform.dscr.$error.required  &&  penform.dscr.$touched && !formSubmitted" style="width: 100%; color: red;">
+            Pensioner Grade Description is required.
+          </div>
+        </div>
+      </li>
+      <li>
+        <button type="submit" class="btn bluebtn" ng-click="savePensionGrade(form)" ng-disabled="penform.$invalid">
+          Submit
+        </button>
+      </li>
+    </ul>
+  </form>
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th width="120">Pensioner Type Code</th>
+        <th width="200">Grade Code</th>
+        <th width="110">Pensioner Description</th>
+        <th width="100">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="n in pensionGradeData |  orderBy:'pensionerTypeCode'">
+        <td>{{n.pensionerTypeCode}}</td>
+        <td>{{n.gradeCode}}</td>
+        <td>{{n.dscr}}</td>
+        <td>
+          <button class="btn editbtn" type="button" data-toggle="modal" data-target="#editpensioner" data-placement="top" title="Edit" ng-click="edit(n)">
+            <i class="fa fa-pencil"></i>
+          </button>
+          <!-- <button class="btn deletebtn" title="Delete" ng-click="deleteData(n.pensionerTypeCode, n.gradeCode)">
+            <i class="fa fa-trash"></i>
+          </button> -->
+          <!-- Inside your table -->
+          <button class="btn deletebtn" title="Delete" data-toggle="modal" data-target="#deleteConfirmationModal"
+            ng-click="setDeleteData(n)">
+            <i class="fa fa-trash"></i>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+
+  <!-- Delete Modal -->
+  <div class="modal fade" id="deleteConfirmationModal" role="dialog" data-backdrop="static">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content">
+        <div class="modal-body">
+          <div class="formsec nobg">
+            <h4 class="modal-title text-center"> Are you sure, you want to delete this data?
+            </h4>
+          </div>
+          <div class="text-center">
+            <button type="button" class="btn bluebtn" style="padding: 5px;width:70px;color: beige;"
+              data-dismiss="modal">Cancel</button>
+            <button type="button" class="btn bluebtn" data-dismiss="modal" style="padding: 5px;width:70px;color: beige;"
+              ng-click="deleteData(deleteDataInfo.pensionerId,deleteDataInfo.dateFrom)">Delete</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- modal for edit -->
+<div class="modal fade" id="editpensioner" data-backdrop="static">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" ng-click="closemodal();cls();">&times;</button>
+        <h4 class="modal-title text-center">Pension Grade Form</h4>
+      </div>
+      <div class="modal-body">
+        <form name="upenform" class="formsec" novalidate>
+          <ul class="formshow list3">
+            <li class="col-6">
+              <div class="form-group">
+                <label class="required">Pensioner Type Code</label>
+                <select class="form-control" style="width: 100%;" ng-model="uform.pensionerTypeCode" name="upensionerTypeCode"
+                  ng-disabled="isIdDisable" required>
+                  <option value="">Select Pensioner Type Code</option>
+                  <option ng-repeat="i in pensionerTypeData" value="{{i.pensionerTypeCode}}">{{i.dscr}}</option>
+                </select>
+              </div>
+            </li>
+        
+            <li>
+              <div class="form-group">
+                <label for="gradeCode" class="required">Grade Code</label>
+                <input type="text" required class="form-control" no-special-characters maxlength="50" ng-model="uform.gradeCode"
+                  name="gradeCode" ng-disabled="isIdDisable" placeholder="Enter Grade Code" />
+              </div>
+            </li>
+            <li>
+              <div class="form-group">
+                <label for="dscr" class="required">Pensioner Grade Description</label>
+                <input type="text" class="form-control" maxlength="50" ng-model="uform.dscr" name="dscr"
+                  placeholder="Pensioner Grade Description" required />
+                <div class="error" ng-show="upenform.dscr.$error.required  &&  upenform.dscr.$touched && !formSubmitted"
+                  style="width: 100%; color: red;">
+                  Pensioner Grade Description is required.
+                </div>
+              </div>
+            </li>
+              <!-- <div class="d-flex justify-content-between " style="width: 100%;">
+                <button type="submit" class="btn bluebtn "   ng-click="savePensionGrade(uform)" ng-disabled="upenform.$invalid">
+                  Update
+                </button>
+              </div> -->
+          </ul>
+          <div class="modal-footer text-center">
+            <div class="text-center">
+              <button type="button" class="btn bluebtn"  ng-click="savePensionGrade(uform)" ng-disabled="upenform.$invalid" >Update</button>
+              <button type="button" class="btn bluebtn" data-dismiss="modal" ng-click="closemodal(); cls();">Close</button>
+            </div>
+          </div> 
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>

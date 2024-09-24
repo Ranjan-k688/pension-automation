@@ -1,0 +1,356 @@
+<div  ng-controller="bankAdvice">
+  <div class="titles" data-aos="fade-up" data-aos-duration="1000">Bank Advice Report</div> 
+  <div class="tabletop fcs"> 
+    <div></div>   
+ <!-- <div><button class="btn bluebtn" data-toggle="modal" data-target="#modalcompanydoc" data-backdrop="static" data-keyboard="false" ng-click="exportToExcel('list')"><i class="fa fa-download"></i> Download</button></div> -->
+ </div>
+  <form  name="generateAdvice"> 
+    <div class="formsec">    
+        <ul class="formshow list3">
+ 
+            <li>
+                <div class="form-group">
+                  <label class="required">Select Year</label>
+                  <input type="text" class="datepicker form-control" autocomplete="off" year-picker placeholder="Select Year" name="year" required ng-model="form.year" maxlength="15" ng-disabled="flag"/>
+                </div>
+                <div class="error" ng-show="generateAdvice.year.$error.required && generateAdvice.year.$touched && !formSubmitted" style="color: red;">
+                  This field is required.
+                </div>
+                <div class="error" ng-show="generateAdvice.pensionerId.$error.maxlength"  style="color: red;">
+                  Only  15 characters are allowed.
+              </div>
+            </li>
+            <li>
+                <div class="form-group">
+                  <label class="required">Select Month</label>
+                  <select class="form-control" name="month" required ng-model="form.month" ng-disabled="flag">
+                    <option value="" selected>Select Month</option>
+                    <option ng-repeat="month in availableMonths" value="{{month.value}}">{{month.name}}</option>
+                  </select>
+                
+                </div>
+                <div class="error" ng-show="generateAdvice.month.$error.required && generateAdvice.month.$touched && !formSubmitted" style="color: red;">
+                  This field is required.
+                </div>
+            </li> 
+            <li>
+              <div class="form-group">
+                <label class="required">Select Bank</label>
+                <select class="form-control" name="bank" required ng-model="form.bank">
+                  <option value=""  selected>Select Bank</option>
+                  <option value="{{x.bank_code}}" ng-repeat="x in banklist | orderBy:['bank_name'] | unique:'bank_code'">{{x.bank_name}}</option>
+                  </select>
+              
+              </div>
+              <div class="error" ng-show="generateAdvice.bank.$error.required && generateAdvice.bank.$touched && !formSubmitted" style="color: red;">
+                This field is required.
+              </div>
+          </li> 
+          <li>
+            <div class="form-group">
+              <label class="required">Select IFSC Code</label>
+              <select class="form-control" name="ifscCode" required ng-model="form.ifscCode"  ng-change="fetchListDateAdvice(form)">
+                <option value=""  selected>Select IFSC Code</option>
+                <option value="{{x.ifsc_code}}" ng-repeat="x in bankifsclist | filter:{bank_code:form.bank} | unique:'ifsc_code'">{{x.ifsc_code}} - {{x.branch_name}}</option>
+                </select>
+            
+            </div>
+            <div class="error" ng-show="generateAdvice.bank.$error.required && generateAdvice.bank.$touched && !formSubmitted" style="color: red;">
+              This field is required.
+            </div>
+        </li> 
+
+          <li>
+            <div class="form-group">
+              <label class="required">Select Advice Date</label>
+              <!-- <input type="text" class="datepicker form-control" month-picker selected-year="form.year" placeholder="Select Month" name="month" required  ng-model="form.month" ng-disabled="flag" /> -->
+            
+             <select class="form-control" name="adviceDate" required ng-model="form.adviceDate" ng-change="fetchListSlnoAdvice()">
+                <option value=""  selected>Select Advice Date</option>
+                  <!-- <option value="1">UNO</option>
+                  <option value="2">SBI</option>
+                  <option value="3">UCo</option>
+                  <option value="4">HDFC</option>
+                  <option value="5">ICICI</option> -->
+                  <option value="{{x}}" ng-repeat="x in adviceDateList">{{x}}</option>
+                </select>
+            
+            </div>
+            <div class="error" ng-show="generateAdvice.adviceDate.$error.required && generateAdvice.adviceDate.$touched && !formSubmitted" style="color: red;">
+              This field is required.
+            </div>
+        </li> 
+        <li>
+          <div class="form-group">
+            <label class="required">Select Advice Slno</label>
+            <!-- <input type="text" class="datepicker form-control" month-picker selected-year="form.year" placeholder="Select Month" name="month" required  ng-model="form.month" ng-disabled="flag" /> -->
+          
+           <select class="form-control" name="adviceSlno" required ng-model="form.adviceSlno">
+              <option value=""  selected>Select Advice Slno</option>
+              <option value="{{x}}" ng-repeat="x in adviceSlnoListUse">{{x}}</option>
+              </select>
+          
+          </div>
+          <div class="error" ng-show="generateAdvice.adviceSlno.$error.required && generateAdvice.adviceSlno.$touched && !formSubmitted" style="color: red;">
+            This field is required.
+          </div>
+      </li> 
+        </ul> 
+    </div>
+    <div class="text-center">
+      <button type="button" class="btn bluebtn" ng-click="getDataFun(form)">Submit</button>
+      </div>
+    <div ng-show="showSuccess" class="success-message">Data Posted Successfully!</div>
+    <div ng-show="showDelete" class="delete-message">Delete Data Successfully!</div>
+
+
+  </form>
+
+
+
+    <div class="titles">Data List </div>   
+<div class="tablesec">
+        <div class="tablesec scrollbar scrollbarPaddingr scrollbar-primary" >
+ 
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Sl.No.</th>
+                <th>Name of Bank</th>
+                <th>IFSC - Branch Name</th>
+                <th>Month</th>
+                <th>Year</th>
+                <th class="text-center" width="300">Action</th> 
+              </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="x in printedData">
+              <td>{{$index+1}}.</td>
+              <td>{{getBankName(x.bank)}}</td>
+              <td>{{x.ifscCode}} - {{x.branchName}}</td>
+              <td>{{getMonthName(x.month)}}</td>
+              <td>{{x.year}}</td>
+              <td >
+                <div  class="text-center" style="display: flex;justify-content: center;">
+
+                  <button ng-if="!getPrintFlag($index + 1)" type="button"  style="color: var(--white);margin-right: 5px;" class="btn bluebtn" ng-click="sendToPrintFun(x,'printdataflg_'+($index+1))">Print</button>
+                
+                 <span><img src="images/checkmark-ok.png" ng-if="getPrintFlag($index + 1)"></span>
+                </div>
+                </td>
+            </tr>
+          </tbody>
+        </table> 
+        
+        </div>
+      </div>
+
+      <div class="modal fade" id="confirmModal" role="dialog" data-backdrop="static">
+        <div class="modal-dialog modal-md">
+          <div class="modal-content">
+            <!-- <div class="modal-header border-o">
+              <h4 class="modal-title text-center">Pensioner Info</h4> 
+              <button type="button" class="close" data-dismiss="modal" ng-click="closemodal()">&times;</button>
+              
+            </div> -->
+            <div class="modal-body">
+              <div class="formsec nobg">
+                <h4 class="modal-title text-center"> In which formate do you want to print?</h4>
+                </div>
+                <div class="text-center">
+                  <button type="button" class="btn bluebtn" data-dismiss="modal" ng-click="closemodal()">Cancel</button>
+                  <button type="button" class="btn bluebtn" ng-click="downloadAdviceExcel()" style="color: var(--white);margin-right: 5px;"><i class="fa fa-download"></i> Download Excel</button>
+                  <button type="button" class="btn bluebtn" ng-click="downloadAdvicePdf()" style="color: var(--white);margin-right: 5px;"><i class="fa fa-download"></i> Download Pdf</button>
+
+                </div>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+
+
+  <div style="display: none;">
+    <div class="titles">Data List </div>   
+<div class="tablesec">
+  
+  <div class="text-center" ng-show="pageFlag"> 
+    
+  <div data-pagination="" data-num-pages="numOfPages()" data-current-page="curPage"
+  data-max-size="maxSize" data-boundary-links="true"> </div>
+  </div>
+  
+        <div class="tablesec table-responsive excelformate" >
+          <style>
+          
+            .printable-table {
+            width: 100%;
+        }
+        
+        .printable-table table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        
+        .printable-table th, .printable-table td {
+            border: 1px solid black;
+            padding: 5px; font-size: 12px;
+            text-align: left;
+        }
+        
+        .printable-table th {
+            background-color: #f2f2f2;
+        }
+        
+        @media print {
+          @page { size: A4 portrait; margin:40px !important;}
+            .printable-table th, .printable-table td {
+                border: 1px solid black !important;
+                padding: 3px !important;
+                text-align: left;
+            }
+
+            body{
+              padding:0!important; margin: 0!important;
+            }
+              
+        }
+
+        .borders td{ border-color: #fff!important;}
+        
+        </style>   
+
+ 
+          <table class="table">
+            <tbody>
+              <tr><td colspan="6"><h1 style="margin:5px 0;"><center>RANCHI  UNIVERSITY, RANCHI</center></h1></td></tr>
+              <tr>
+                <td colspan="3" style="padding-top: 15px!important;"><strong>Letter No.  Pen/ - </strong>........................................................................</td> 
+                <td colspan="3" style="padding-top: 15px!important;"><strong>Dated - </strong>..................................................</td>
+              </tr>
+              <tr>
+                <td colspan="6">
+                  To, 
+                  <div style="padding-left: 30px;">
+                    The Manager,<br>
+                    {{form.bank=='CBI'?'Central Bank  of India':'Punjab National Bank'}}<br>
+                  Ranchi University Campus, Ranchi<br>
+                  <br>
+                  Sub.:- Payment of Pension for the month of <strong>{{getMonthName(form.month)}} - {{form.year}}</strong><br>
+                  <strong>IFSC:- {{monPensioerReportExcel[0].ifsc_code}}</strong> <br>
+                  <strong>Bank Name:- {{getBankName(monPensioerReportExcel[0].bank_code)}}</strong>
+                  </div>
+                  Sir,
+                  <div style="padding-left: 30px; line-height: 1.5;">
+                    On the subject mentioned above please find enclosed herewith an <strong>A/C  payee cheque /D.D. No.</strong>........................................................ <br>
+                    <br> <strong>Dated - </strong>..................................................  for Rs.<strong>{{monPensioerReportTotal | indianNumber}}</strong><br>
+                    to be trasferred in the account of pensioners as noted below :-
+                  </div>
+                  
+
+                  
+                </td>
+              </tr>
+              <!-- <tr>
+              <td colspan="2"><strong>Bank Name - {{getBankName(form.bank)}}</strong></td> 
+              <td colspan="2"><strong>Date - ............................</strong></td> 
+              <td colspan="2" style="text-align: right;"><strong>{{getMonthName(form.month)}} - {{form.year}}</strong></td> 
+            </tr> -->
+            
+            <tr>
+              <th width="50">Sl.No.</th>
+              <th>Name of Beneficiary</th>
+              <th>Account No.(C.B.S. A/C NO)</th> 
+              <!-- <th>PAN No.</th>
+              <th>Branch Name</th> -->
+              <th width="200">Amount</th> 
+            </tr>
+            <tr ng-repeat="x in monPensioerReportExcel">
+              <td>{{$index+1}}.</td>
+              <td>{{x.name_of_beneficiary}}</td>
+              <td>{{x.account_no}}</td>
+              <!-- <td>{{x.pan_no}}</td>
+              <td>{{x.branch_name}}</td>  -->
+              <td>{{x.net_pension | indianNumber}}</td>
+            </tr>
+            <tr>
+              <th colspan="3" style="text-align: right;">Total Amount</th> 
+              <th>{{monPensioerReportTotal | indianNumber}}</th>
+            </tr> 
+            <tr>
+              <td colspan="6"><strong>Total Amount in Words :- {{convertNumberToWords(monPensioerReportTotal)}}</strong></td>  
+            </tr>  
+          </tbody>
+        </table> 
+
+        <table class="table">
+          <tr>
+            <td colspan="2" style="border-color:#fff!important;">
+              <div style="width:160px;">
+              <div style="text-align: center;font-weight: bold; padding-top:150px">Assistant <br>Pen. Cell. R.U., Ranchi </div>
+            </div>
+            </td>
+            <td style="border-color:#fff!important;">
+              <div style="width:160px;">
+              <div style="text-align: center; font-weight: bold; padding-top:150px">Finance Officer <br>Ranchi University, Ranchi</div>
+            </div>
+            </td>
+            <td style="border-color:#fff!important;"><div style="text-align: center; font-weight: bold; padding-top:150px">Registrar <br>Ranchi University, Ranchi </div> </td>
+          </tr>
+        </table>
+
+        <!--monPensioerReportTotalWords <div style="width:100%; display: flex; justify-content: space-between; padding-top:200px; text-align: center; ">
+          <div>Assistant <br>Pen. Cell. R.U., Ranchi </div>
+          <div>Finance Officer <br>Ranchi University, Ranchi</div>
+          <div>Registrar <br>Ranchi University, Ranchi </div> 
+        </div> -->
+        
+        </div>
+        <div class="text-center" ng-show="pageFlag"> 
+    
+          <div  data-pagination="" data-num-pages="numOfPages()" data-current-page="curPage"
+          data-max-size="maxSize" data-boundary-links="true"> </div>
+          </div>
+      </div>
+</div>
+<div class="loaderbg generateload" >
+  <div class="loading">
+    Generating
+  <span class="loading-dots">.</span>
+  <span class="loading-dots">.</span>
+  <span class="loading-dots">.</span>
+</div>
+</div>
+
+  <div class="popupbg"></div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

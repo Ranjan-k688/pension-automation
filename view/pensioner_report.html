@@ -1,0 +1,894 @@
+<div  ng-controller="pensionerList">
+  <div class="titles">Pension Report</div> 
+ 
+
+  <div class="tabletop fcs">
+    <!-- <div><button class="btn bluebtn" data-toggle="modal" data-target="#modalcompanydoc" data-backdrop="static" data-keyboard="false" ng-click="exportToExcel()"><i class="fa fa-download"></i> Download</button></div> -->
+    
+     <!-- <div class="searchfield searchbox" ng-if="searchCriteria && searchCriteria!='All'"><input class="form-control" type="text" value="" placeholder="Enter {{srchCriteria}}" ng-style="{'width': valuew + 'px'}" ng-model="frm.searchCriteriaVal"/> 
+      <button type="button" ng-click="searchPensionerDetails(searchCriteria,frm.searchCriteriaVal);"><i class="fa fa-search"></i>< width: 240px;/button></div> -->
+        
+  
+  
+        <div class="searchflex">
+          <div><select class="form-control" ng-model="frm.searchCriteria" ng-options="search1.shortName as search1.displayName for search1 in masterdata | filter: { type: 'search_criteria' }| orderBy:'displayName'"  ng-change="checkCharacterLengthInPixels(frm.searchCriteria,'report')">
+            <option value="" selected >Search By</option>
+        </select></div>
+        <div class="searchbox" ng-if="frm.searchCriteria && frm.searchCriteria!='All'"><input class="form-control" type="text" value="" placeholder="Enter {{frm.srchCriteria}}" style="width: 240px;" ng-model="frm.searchCriteriaVal"/>
+          <!-- <button type="button"><i class="fa fa-search"></i></button> -->
+        </div>
+        <div><input type="text" class="datepicker form-control" autocomplete="off" year-picker placeholder="Select Year" name="year" required ng-model="search.year" maxlength="15" ng-disabled="flag"/></div>
+        <div>
+            <select class="form-control" name="month" required ng-model="search.month" ng-disabled="flag">
+              <option value="" selected>Select Month</option>
+              <option ng-repeat="month in availableMonths" value="{{month.value}}">{{month.name}}</option>
+            </select>
+          
+          </div>
+          
+            <div><button class="btn bluebtn" data-toggle="modal" data-target="#modalcompanydoc" data-backdrop="static" data-keyboard="false" ng-click="fetchMonthlyPensionerData(frm.searchCriteria,frm.searchCriteriaVal,search,'')"> Get</button></div>
+          
+        </div>
+        <div >
+          <button class="btn bluebtn" data-toggle="modal" data-target="#modalcompanydoc" data-backdrop="static" data-keyboard="false" ng-click="exportToExcel('report')"><i class="fa fa-download"></i> Download</button>
+   
+          </div>
+    </div>
+
+
+      <div class="text-center" ng-show="pageFlag"> 
+    
+        <div data-pagination="" data-num-pages="numOfPages()" data-current-page="curPage"
+        data-max-size="maxSize" data-boundary-links="true"> </div>
+        </div>
+<div class="tablesec scrollbar scrollbarPaddingr scrollbar-primary">
+
+        <table class="table table-striped">
+          <thead>
+            <tr >
+              <!-- <th width="60">Photo</th> -->
+              <!-- <th width="120">Sl. NO.</th> -->
+              <th width="120">Pension ID</th>
+              <th width="200">Name of Employee</th>
+              <th width="200">Name of Pensioner</th>
+              <th class="text-center">Basic</th>
+              <th class="text-center">Age % Increase</th>
+              <th class="text-center">Revised Basic</th>
+              <th class="text-center">Dearness Relief</th>
+              <th class="text-center">Medical Allowance</th>
+              <th class="text-center">Gross Pension</th>
+              <th class="text-center">HRA</th>
+              <th class="text-center">TDS</th>
+              <th class="text-center">Rate of Pension</th>
+              <th class="text-center">Net Pension</th>
+              <th class="text-center">Actual Net Pension</th>
+              <th class="text-center">Month</th>
+              <th class="text-center">Year</th>
+              <th class="text-center">Status</th>
+              <!-- <th width="110">Mobile</th> -->
+              <!-- <th>Email </th> -->
+              <th style="min-width: 75px;" class="text-center">Actions</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr ng-repeat="x in ReportOfPensioner | orderBy:'-pension_status'">
+              <!-- <td><img src="images/users.jpg" alt="img" height="26" class="rounded" /></td> -->
+              <!-- <td>{{$index + 1}}</td> -->
+              <td>{{x.id}}</td>
+              <td>{{x.sirName}} {{x.name_of_employee}}</td>
+              <td>{{x.name_of_pensioner}}</td>
+              <td class="text-center">{{x.basic}}</td>
+              <td class="text-center">{{x.age_perc_increase}}%</td>
+              <td class="text-center">{{x.revised_basic}}</td>
+              <td class="text-center">{{x.dr}}</td>
+              <td class="text-center">{{x.ma}}</td>
+              <td class="text-center">{{x.gross_pension}}</td>
+              <td class="text-center">{{x.hra}}</td>
+              <td class="text-center">{{x.tds}}</td>
+              <td class="text-center">{{x.rate_of_pension - x.stopped_percentage}}%</td>
+              <td class="text-center" ng-style="x.net_pension!=x.revised_net_pension? {'background-color': 'Red','color':'white'} : {}">{{x.net_pension}}</td>
+              <td class="text-center">{{x.revised_net_pension}}</td>
+              <td class="text-center">{{getMonthName(x.pension_month)}}</td>
+              <td class="text-center">{{x.pension_year}}</td>
+              <td class="text-center">{{x.pension_status}}</td>
+              <!-- <td><a href="tel:9876543210">{{x.}}</a></td> -->
+              <!-- <td><a href="mailto:amardeepsingh@gmail.com">{{x.}}</a></td> -->
+              <td> 
+                <button class="btn viewbtn" data-toggle="modal" data-placement="top" title="View" data-target="#myModal" ng-click="showdata(x);" ><i class="fa fa-eye"></i></button>
+                <!-- <button class="btn editbtn" data-toggle="modal" data-placement="top" title="Edit" data-target="#editpensioner" ng-click="editdata(x.id);"><i class="fa fa-pencil"></i></button> -->
+                <button class="btn deletebtn" data-toggle="modal" data-placement="top" title="Delete" data-target="#deleteModal" ng-disabled="!(x.pension_status=='U' || x.pension_status=='R')" ng-click="sendDataDelete(x.id,x.pension_month,x.pension_year);"><i class="fa fa-trash"></i></button> 
+              </td>
+            </tr>
+           
+          </tbody>
+        </table>
+        <!-- <div class="text-center" ng-show="pageFlag"> 
+    
+          <div data-pagination="" data-num-pages="numOfPages()" data-current-page="curPage"
+          data-max-size="maxSize" data-boundary-links="true"> </div>
+          </div> -->
+      </div>
+
+<!-- for excel only -->
+      <div class="tablesec excelformate"  style="display: none;">
+        <table class="table table-striped" id="exportTable">
+          <thead>
+            <tr >
+              <!-- <th width="60">Photo</th> -->
+              <th width="120">ID</th>
+              <th>Sir Name</th>
+              <th width="200">Name of Pensioner</th>
+              <th width="200">Name of Employee</th>
+              <th >Account No.</th>
+              <th class="text-center">DOB</th>
+              <th class="text-center">DOJ</th>
+              <th class="text-center">DOR</th>
+              <th class="text-center">DOD</th>
+              <th class="text-center">Aadhar No.</th>
+              <th class="text-center">PAN No.</th>
+              <th class="text-center">Pan Record</th>
+              <th class="text-center">Employee Type</th>
+              <th class="text-center">Designation</th>
+              <th class="text-center">College/Department</th>
+              <th class="text-center">Basic</th>
+              <th class="text-center">Age % Increase</th>
+              <th class="text-center">Revised Basic</th>
+              <th class="text-center">D.R.</th>
+              <th class="text-center">M.A.</th>
+              <th class="text-center">Gross Pension</th>
+              <th class="text-center">HRA</th>
+              <th class="text-center">Total (After HRA Ded.)</th>             
+              <th class="text-center">I. Tax</th>
+              <th class="text-center">Total</th>
+              <!-- <th class="text-center">Revised Net Pension Total</th> -->
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr ng-repeat="x in pensionerReportExcel">
+              <!-- <td><img src="images/users.jpg" alt="img" height="26" class="rounded" /></td> -->
+              <td>{{x.id}}</td>
+              <td>{{x.sir_name}}</td>
+              <td>{{x.name_of_pensioner}}</td>
+              <td>{{x.name_of_employee}}</td>
+              <td class="text-center">{{x.account_no}}</td>
+              <td class="text-center">{{x.date_of_birth}}</td>
+              <td class="text-center">{{x.date_of_joining}}</td>
+              <td class="text-center">{{x.dateOfRelieving}}</td>
+              <td class="text-center">{{x.date_of_relieving}}</td>
+              <td class="text-center">{{x.adhar_no}}</td>
+              <td class="text-center">{{x.pan_no}}</td>
+              <td class="text-center">{{x.pan_record}}</td>
+              <td class="text-center">{{x.emp_type}}</td>
+              <td class="text-center">{{x.post}}</td>
+              <td class="text-center">{{x.college}}</td>
+              <td class="text-center">{{x.basic}}</td>
+              <td class="text-center">{{x.age_perc_increase}}</td>
+              <td class="text-center">{{x.revised_basic}}</td>
+              <td class="text-center">{{x.dr}}</td>
+              <td class="text-center">{{x.ma}}</td>
+              <td class="text-center">{{x.gross_pension}}</td>
+              <td class="text-center">{{x.hra}}</td>              
+              <td class="text-center">{{x.total_after_hra_deduction}}</td>
+              <td class="text-center">{{x.tds}}</td>
+              <td class="text-center">{{x.net_pension}}</td>
+              <!-- <td class="text-center">{{x.revised_net_pension}}</td> -->
+            </tr>
+           
+          </tbody>
+        </table>
+      </div>
+    
+
+
+    
+   
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog" data-backdrop="static">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" ng-click="closemodal()">&times;</button>
+          <!-- <h4 class="modal-title text-center">Pensioner Info</h4> -->
+          <h4 class="modal-title">Pensioner Info</h4>
+        </div>
+        <div class="modal-body">
+          <div class="formsec nobg">
+            
+            <ul class="formshow list2">
+              <li>
+                  <div class="textview">
+                    <strong >Pensioner ID</strong> <span>{{showdetails.id}}</span>
+                  </div>
+              </li>
+              <li ng-if="showdetails.staff_pensioner_id">
+                <div class="textview">
+                  <strong >Employee ID</strong> <span>{{showdetails.staff_pensioner_id}}</span>
+                </div>
+            </li>
+            <li ng-if="showdetails.staff_pensioner_id">
+              <div class="textview">
+                <strong >Name of Pensioner</strong> <span>{{showdetails.name_of_pensioner}}</span>
+              </div>
+          </li>
+              <li>
+                <div class="textview">
+                  <strong >Name of Employee</strong> <span>{{showdetails.sir_name}} {{showdetails.name_of_employee}}</span>
+                </div>
+            </li>
+
+          <li>
+            <div class="textview">
+              <strong >Gender</strong> <span>{{showdetails.sex}}</span>
+            </div>
+        </li>
+        <li>
+          <div class="textview">
+            <strong >Date of Birth</strong> <span>{{formatDateToPreviousType(showdetails.date_of_birth)}}</span>
+          </div>
+        </li>
+        <li>
+          <div class="textview">
+            <strong >Mobile No.</strong> <span>{{showdetails.mobile_no}}</span>
+          </div>
+        </li>
+        <li>
+          <div class="textview">
+            <strong >WhatsApp No.</strong> <span>{{showdetails.whats_app_mobile_no}}</span>
+          </div>
+        </li>
+        <li>
+          <div class="textview">
+            <strong >Email</strong> <span>{{showdetails.email_id}}</span>
+          </div>
+        </li>
+        <li>
+          <div class="textview">
+            <strong >Employee Type</strong> <span>{{showdetails.emp_type}}</span>
+          </div>
+        </li>
+        <li>
+          <div class="textview">
+            <strong >Designation</strong> <span>{{showdetails.post}}</span>
+          </div>
+        </li>
+        <li>
+          <div class="textview">
+            <strong >College/Department</strong> <span>{{showdetails.college}}</span>
+          </div>
+        </li>
+
+        <li>
+          <div class="textview">
+            <strong >Date of Joining</strong> <span>{{formatDateToPreviousType(showdetails.date_of_joining)}}</span>
+          </div>
+        </li>
+
+        <li>
+          <div class="textview">
+            <strong >Date of Superannuation</strong> <span>{{formatDateToPreviousType(showdetails.date_of_relieving)}}</span>
+          </div>
+        </li>
+        <li>
+          <div class="textview">
+            <strong >Account No.</strong> <span>{{showdetails.account_no}}</span>
+          </div>
+        </li>
+        <li>
+          <div class="textview">
+            <strong >Aadhar No.</strong> <span>{{showdetails.adhar_no}}</span>
+          </div>
+        </li>
+        <li>
+          <div class="textview">
+            <strong >Pan Record</strong> <span>{{showdetails.pan_record}}</span>
+          </div>
+        </li>
+        <li ng-if="showdetails.pan_record=='Yes'">
+          <div class="textview">
+            <strong >PAN No.</strong> <span>{{showdetails.pan_no}}</span>
+          </div>
+        </li>
+        <li>
+          <div class="textview">
+            <strong >PPO No.</strong> <span>{{showdetails.ppo_no}}</span>
+          </div>
+        </li>
+        <li>
+          <div class="textview">
+            <strong >Pay Commission Code</strong> <span>{{showdetails.pay_commission_code}}</span>
+          </div>
+        </li>
+
+        <li>
+          <div class="textview">
+            <strong >Basic</strong> <span>{{showdetails.basic}}</span>
+          </div>
+        </li>
+        <li>
+          <div class="textview">
+            <strong >Dearness Relief(DR)</strong> <span>{{showdetails.dr}}</span>
+          </div>
+        </li>
+        <li>
+          <div class="textview">
+            <strong >Medical Allowance</strong> <span>{{showdetails.ma}}</span>
+          </div>
+        </li>
+        <li>
+          <div class="textview">
+            <strong >Gross Pension</strong> <span>{{showdetails.gross_pension}}</span>
+          </div>
+        </li>
+        <li>
+          <div class="textview">
+            <strong >HRA</strong> <span>{{showdetails.hra}}</span>
+          </div>
+        </li>
+        <li>
+          <div class="textview">
+            <strong >Other Allowance</strong> <span>{{showdetails.others_allowance}}</span>
+          </div>
+        </li>
+        <li>
+          <div class="textview">
+            <strong >TDS</strong> <span>{{showdetails.tds}}</span>
+          </div>
+        </li>
+        <li>
+          <div class="textview">
+            <strong >Rate of Pension</strong> <span>{{showdetails.rate_of_pension - showdetails.stopped_percentage}}%</span>
+          </div>
+        </li>
+        <li>
+          <div class="textview">
+            <strong >Age Percent Increase</strong> <span>{{showdetails.age_perc_increase}}%</span>
+          </div>
+        </li>
+        <li>
+          <div class="textview">
+            <strong >Net Pension</strong> <span>{{showdetails.net_pension}}</span>
+          </div>
+        </li>
+        <li>
+          <div class="textview" ng-if="showdetails.pensioner_status_code=='0'">
+            <strong >Date Of Death</strong> <span>{{formatDateToPreviousType(showdetails.date_of_death)}}</span>
+          </div>
+        </li>
+             
+      </ul>
+            </div>
+            <div class="  text-center">
+              <button type="button" class="btn bluebtn" data-dismiss="modal" ng-click="closemodal()">Close</button>
+            </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+  <!-- Modal -->
+  <div class="modal fade" id="deleteModal" role="dialog" data-backdrop="static">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content">
+        <!-- <div class="modal-header border-o">
+          <h4 class="modal-title text-center">Pensioner Info</h4> 
+          <button type="button" class="close" data-dismiss="modal" ng-click="closemodal()">&times;</button>
+          
+        </div> -->
+        <div class="modal-body">
+          <div class="formsec nobg">
+            <h4 class="modal-title text-center"> Do you want to delete this record ?</h4>
+           
+            </div>
+            <div class="text-center">
+              <button type="button" class="btn bluebtn" data-dismiss="modal" ng-click="closemodal()">Cancel</button>
+              <button type="button" class="btn bluebtn" data-dismiss="modal" ng-click="deleteById(deleteDate.id,deleteDate.month,deleteDate.year)">Delete</button>
+            </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+  
+
+
+
+  <div class="modal fade" id="editpensioner" data-backdrop="static">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" ng-click="closemodal()">&times;</button>
+          <!-- <h4 class="modal-title text-center">Pensioner Info</h4> -->
+          <h4 class="modal-title">Edit Pensioner Info</h4>
+        </div>
+        <div class="modal-body">
+          <div class="formsec nobg">
+              
+    <div>
+      <div class="titles">Pensioner Form</div>  
+        <div class="formsec">
+          <h4>Pensioner Info</h4>
+          <ul class="formshow list3">
+              <!-- <li>
+                  <div class="form-group">
+                    <label class="required">Pensioner ID</label>
+                    <input type="text" class="form-control" placeholder="Employee Number" required="" ng-model="form.pensionerId"/>
+                  </div>
+              </li> -->
+              <li>
+                  <div class="form-group">
+                    <label>Name of Employee</label>
+                    <div class="disflex">
+                    <select class="form-control" style="width: 90px;" ng-model="form.prefix" ng-options="prefix.shortName as prefix.displayName for prefix in masterdata | filter: { type: 'prefix' } | orderBy:'displayName'">
+                    <option value="" selected>Prefix</option>
+                    </select>
+                    <input type="text" class="form-control" placeholder="Name" required="" ng-model="form.employeeName"/>
+                    </div>
+                  </div>
+              </li>
+              <li>
+                <div class="form-group">
+                  <label>Employee Type</label>
+                  <select class="form-control" ng-model="form.pensionerTypeCode" data-live-search="true" title="Select Employee Type" ng-options="pensionerType.pensionerTypeCode as pensionerType.dscr for pensionerType in pensionerType"><!--ng-change="fetchgrade(form.pensionerTypeCode)"-->
+                    <option value="" selected>Select Employee Type</option>
+                </select>
+                </div> 
+            </li>
+            <li>
+              <div class="form-group">
+                <label>Pay Commission Code</label>
+                <select class="form-control" ng-model="form.payCommissionCode" data-live-search="true" title="Select Pay Commission Code" ng-options="x.payCommissionCode as x.dscr for x in payCommisions">
+                  <option value=""  selected>Select Pay Commission Code</option>
+                  </select>
+              </div> 
+            </li>
+              <li>
+                <div class="form-group">
+                  <label>Gender </label>
+                  <select class="form-control" ng-model="form.sex" data-live-search="true" title="Select Gender" ng-options="sex.shortName as sex.displayName for sex in masterdata | filter: { type: 'sex' } | orderBy:'displayName'">
+                  <option value=""  selected>Select Gender</option>
+                  </select>
+                </div>
+              </li>
+              <li>
+                <div class="form-group">
+                  <label>Date of Birth </label>
+                  <input type="text" class="datepicker form-control"  placeholder="Select Date" datepicker required="" ng-model="form.dateOfBirth"/>
+                </div> 
+            </li>
+              <!-- <li>
+                  <div class="form-group">
+                    <label>RU Sl No.</label>
+                    <input type="text" class="form-control" placeholder="Ru slno" required="" ng-model="form.ruSlno"/>
+                  </div>
+              </li> -->
+              <li>
+                <div class="form-group">
+                  <label>Father's Name</label>
+                  <input type="text" class="form-control" placeholder="Father's Name" required="" ng-model="form.fatherName"/>
+                 </div>
+            </li>
+            <li>
+              <div class="form-group">
+                <label>Religion</label>
+                <select class="form-control" ng-model="form.religionName" ng-options="x.religionName as x.religionName for x in religion">
+                  <option value=""  selected>Select Religion</option>
+                  </select>
+               </div>
+          </li>
+  
+            <li>
+              <div class="form-group">
+                <label>Pensioner Name</label>
+                <input type="text" class="form-control" placeholder="Pensioner Name" required="" ng-model="form.pensionerName"/>
+              </div> 
+            </li>
+            <li>
+              <div class="form-group">
+                <label>Pensioner Relation</label>
+                  <select class="form-control" ng-model="form.pensionerRelation" data-live-search="true" title="Select Pensioner Relation" ng-options="x.pensionerRelation as x.pensionerRelation for x in relationship">
+                  <option value=""  selected>Select Pensioner Relation</option>
+                  </select>
+              </div> 
+            </li>
+            <li>
+              <div class="form-group">
+                <label>Rate Of Pension</label>
+                <input type="text" class="form-control" placeholder="Rate Of Pension" required="" ng-model="form.rateOfPension"/>
+              </div> 
+            </li>
+             
+              </ul>
+          </div>
+  
+          <div class="formsec" style="background: #f9f0e1;">
+            <h4>Addresss</h4>
+            <ul class="formshow list3">
+            <li>
+              <div class="form-group">
+                <label>Pin</label>
+                <input type="text" class="form-control" placeholder="Pin" required="" ng-model="form.pin" ng-blur="address(form.pin)"/>
+              </div> 
+          </li>
+          <li>
+            <div class="form-group">
+              <label>Address</label>
+              <input type="text" class="form-control" placeholder="Address" required="" ng-model="form.addr1"/>
+            </div> 
+        </li>
+          <li>
+            <div class="form-group">
+              <label>Post office</label>
+            <select class="form-control" ng-model="form.addr2" data-live-search="true" title="Select Post Office">
+              <option value=""  selected>Post Office</option>
+              <option ng-repeat="post in postoffice" value="{{post.Name}}">{{post.Name}}</option>
+            </select>
+            </div> 
+        </li>
+            <li>
+              <div class="form-group">
+                <label>City</label>
+                <input type="text" class="form-control" placeholder="City" required="" ng-model="form.city"/>
+              </div> 
+          </li>
+          <li>
+            <div class="form-group">
+              <label>State</label>
+              <input type="text" class="form-control" placeholder="State" required="" ng-model="form.state"/>
+            </div> 
+        </li>
+  
+                </ul>
+             </div>
+  
+  
+  
+  
+           <div class="formsec" style="background: #f9f0e1;">
+            <h4>Affiliation Info</h4>
+            <ul class="formshow list3">
+              <!-- <li>
+                <div class="form-group">
+                  <label>University Code</label>
+                  <input type="text" class="form-control" placeholder="University Code" required="" ng-model="form.universityCode"/>
+                </div> 
+            </li> -->
+          <li>
+            <div class="form-group">
+              <label>College/University</label>
+                <select class="form-control" ng-model="form.collegeCode" data-live-search="true" title="Select College" ng-options="x.collegeShortName as x.dscr for x in colleges" ng-change="fetchdepartment(form.collegeCode);">
+                <option value=""  selected>Select College</option>
+            </select>
+            </div> 
+        </li>
+            <li>
+              <div class="form-group">
+                <label>Department</label>
+                <select class="form-control" ng-model="form.departmentCode" data-live-search="true" title="Select Department" ng-options="x.deptShortName as x.dscr for x in departmentlist">
+                  <option value=""  selected>Select Department</option>
+              </select>
+              </div> 
+          </li>
+            <li>
+              <div class="form-group">
+                <label>Level</label>
+                <select class="form-control" ng-model="form.gradeCode" data-live-search="true" title="Select Level" ng-options="grade.gradeCode as grade.dscr for grade in pensionerGrade | filter: {pensionerTypeCode: form.pensionerTypeCode} " ><!--ng-change="fetchdesigation(form.gradeCode);"-->
+                  <option value=""  selected>Select Level</option>
+              </select>
+              </div> 
+          </li>
+  
+            <li>
+              <div class="form-group">
+                <label>Designation</label>
+                <select class="form-control" ng-model="form.desigShortName" data-live-search="true" title="Select Designation" ng-options="designation.desigShortName as designation.dscr for designation in pensionerDesignation | filter: { gradeCode: form.gradeCode } ">
+                  <option value=""  selected>Select Designation</option>
+              </select>
+              </div> 
+          </li>
+            <li ng-if="form.pensionerTypeCode=='PT1'">
+            <div class="form-group">
+              <label>Subject</label>
+              <select class="form-control" ng-model="form.subjectCode" data-live-search="true" title="Select Subject" ng-options="subjectCode.subjectCode as subjectCode.dscr for subjectCode in subjects">
+                <option  value=""  selected>Select Subject</option>
+            </select>
+            </div> 
+          </li>
+          <li>
+            <div class="form-group">
+              <label>Pensioner Univ Id</label>
+              <input type="text" class="form-control" placeholder="Pensioner Univ Id" required="" ng-model="form.pensionerUnivId"/>
+            </div> 
+          </li>
+                </ul>
+             </div>
+  
+  
+  
+  
+             
+           <div class="formsec" style="background: #eae7e7">
+            <h4>Appointment Info</h4>
+            <ul class="formshow list3">
+              <li>
+                <div class="form-group">
+                  <label>Date of Last Appointment</label>
+                  <input type="text" class="datepicker form-control"  placeholder="Select Date" datepicker required="" ng-model="form.dateOfLastAppointment"/>
+                </div> 
+              </li>
+              <li>
+                <div class="form-group">
+                  <label>Date of Regularisation</label>
+                  <input type="text" class="datepicker form-control"  placeholder="Select Date" datepicker required="" ng-model="form.dateOfRegularisation"/>
+                </div> 
+              </li>
+  
+              <li>
+                <div class="form-group">
+                  <label>Date of Separation</label>
+                  <input type="text" class="datepicker form-control"  placeholder="Select Date" datepicker required="" ng-model="form.dateOfSeparation"/>
+                </div> 
+              </li>
+  
+                </ul>
+             </div>
+  
+  
+  
+  
+             <div class="formsec">
+              <h4>Personal Info</h4>
+              <ul class="formshow list3">
+  
+                <li>
+                  <div class="form-group">
+                    <label class="required">PPO No.</label>
+                    <input type="text" class="form-control" placeholder="PPO No" required ng-model="form.ppoNo"/>
+                  </div> 
+                </li>
+                <li>
+                  <div class="form-group">
+                    <label>Aadhaar No.</label>
+                    <input type="text" class="form-control" placeholder="Aadhaar No" required="" ng-model="form.aadhaar"/>
+                  </div> 
+                </li>
+                <li>
+                  <div class="form-group">
+                    <label>PAN Record</label>
+                    <select class="form-control" ng-model="form.panRecord" data-live-search="true"  title="Select" ng-options="panRecord.shortName as panRecord.displayName for panRecord in masterdata | filter: { type: 'pan_record' } | orderBy:'displayName'">
+                      <option value=""  selected >Select</option>
+                  </select>
+                  </div> 
+                </li>
+                <li>
+                  <div class="form-group">
+                    <label>PAN No.</label>
+                    <input type="text" class="form-control" placeholder="PAN No" required="" ng-model="form.pan"/>
+                  </div> 
+                </li>
+  
+                <li>
+                  <div class="form-group">
+                    <label>Mobile No.</label>
+                    <input type="text" class="form-control" placeholder="Mobile No" required="" ng-model="form.mobileNo"/>
+                  </div> 
+                </li>
+                 
+                  </ul>
+               </div>
+                
+               <div class="formsec" style="background: #ffe5ed;">
+                <h4>Bank Account Info</h4>
+                <ul class="formshow list3">
+                  <li>
+                    <div class="form-group">
+                      <label>Name of Bank</label>
+                      <select class="form-control" disabled ng-model="bank.bankCode" ng-options="bank.bankCode as bank.bankName for bank in banklist">
+                        <option value=""  selected >Select Bank</option>
+                    </select>
+                    </div> 
+                  </li>
+                  <li>
+                    <div class="form-group">
+                      <label>Date Effective from</label>
+                      <input type="text" class="datepicker form-control"  placeholder="Select Date" datepicker required="" ng-model="bank.accountEffectiveFrom" disabled/>
+                    </div> 
+                  </li>
+                  <li>
+                    <div class="form-group">
+                      <label>Account No.</label>
+                      <input type="text" class="form-control" placeholder="Account No" required="" ng-model="bank.accountNo" disabled/>
+                    </div> 
+                  </li>
+                  <li>
+                    <div class="form-group">
+                      <label>IFSC Code</label>
+                      <input type="text" class="form-control" placeholder="IFSC Code" required="" ng-model="bank.ifscCode" disabled/>
+                    </div> 
+                  </li>
+  
+                  <li>
+                    <div class="form-group">
+                      <label>Branch</label>
+                      <input type="text" class="form-control" placeholder="Branch" required="" ng-model="bank.branchName" disabled/>
+                    </div> 
+                  </li>
+                  <li>
+                    <div class="form-group">
+                      <label>City</label>
+                      <input type="text" class="form-control" placeholder="Branch" required="" ng-model="bank.branchCity" disabled/>
+                    </div> 
+                  </li>
+                  <li>
+                    <div class="form-group">
+                      <label>State</label>
+                      <input type="text" class="form-control" placeholder="Branch" required="" ng-model="bank.state" disabled/>
+                    </div> 
+                  </li>
+                   
+                    </ul>
+                 </div>
+  
+  
+                 <div class="formsec" style="background: #dadbf7;">
+                <h4>Pay Details</h4>
+                <ul class="formshow list3">
+             
+              <li>
+                <div class="form-group">
+                  <label>Date From</label>
+                  <input type="text" class="datepicker form-control"  placeholder="Select Date" datepicker required="" ng-model="paydetail.dateFrom" disabled/>
+                </div> 
+              </li>
+  
+              <li>
+                <div class="form-group">
+                  <label>Basic pension</label>
+                  <input type="text" class="form-control" placeholder="Basic pension" required="" ng-model="paydetail.pensionBasic" disabled/>
+                </div> 
+              </li>
+              <li>
+                <div class="form-group">
+                  <label>Medical Allowance</label>
+                  <input type="text" class="form-control" placeholder="Basic pension" required="" ng-model="paydetail.medicalAllowance" disabled/>
+                </div> 
+              </li>
+              <li>
+                  <div class="form-group">
+                    <label>HRA</label>
+                    <input type="text" class="form-control" placeholder="Basic pension" required="" ng-model="paydetail.hra" disabled/>
+                  </div> 
+                </li>
+            </ul> 
+        </div>
+  
+              <div class="formsec" style="background: #dadbf7;">
+                <h4>Other Info</h4>
+                <ul class="formshow list3">
+                  <li>
+                    <div class="form-group">
+                      <label>Pensioner Status Code</label>
+                      <select class="form-control" ng-model="form.pensionerStatusCode" ng-options="x.pensionerStatusCode as x.dscr for x in pensionerStatus">
+                        <option value=""  selected >Select Pensioner Status Code</option>
+                    </select>
+                    </div> 
+                  </li>
+                  <li>
+                    <div class="form-group" ng-if="form.pensionerStatusCode=='0'">
+                      <label>Date Of death</label>
+                      <input type="text" class="datepicker form-control"  placeholder="Select Date" datepicker required="" ng-model="form.dateOfDeath"/>
+                    </div> 
+                  </li>
+  
+  
+              <!-- <li>
+                <div class="form-group">
+                  <label>Status form Date</label>
+                  <input type="text" class="datepicker form-control"  placeholder="Select Date" datepicker required="" ng-model="form.statusformDate"/>
+                </div> 
+              </li>
+              <li>
+                <div class="form-group">
+                  <label>Inserted On</label>
+                  <input type="text" class="datepicker form-control"  placeholder="Select Date" datepicker required="" ng-model="form.insertedOn"/>
+                </div> 
+              </li>-->
+              <!-- <li>
+                <div class="form-group">
+                  <label>User Id Maker</label>
+                   <input type="text" class="form-control"  placeholder="User Id Maker" required="" ng-model="form.userId"/>
+                </div> 
+              </li>  -->
+              <!-- <li>
+                <div class="form-group">
+                  <label>Verified On</label>
+                  <input type="text" class="datepicker form-control"  placeholder="Select Date" datepicker required="" ng-model="form.verifiedOn"/>
+                </div> 
+              </li> -->
+              <!-- <li>
+                  <div class="form-group">
+                    <label>Nationality </label>
+                    <select class="form-control" data-live-search="true" title="Select Nationality">
+                      <option>Afganistan</option>
+                      <option>Indian</option>
+                      <option>UK</option>
+                      <option>USA</option> 
+                    </select>
+                  </div>
+              </li> -->
+              
+              <!-- <li>
+                  <div class="form-group">
+                    <label>Gender</label>
+                    <select class="form-control" data-live-search="true" title="Select Gender">
+                      <option>Male</option>
+                      <option>Female</option>
+                      <option>Other</option> 
+                    </select>
+                  </div>
+              </li> -->
+              <!-- <li>
+                  <div class="form-group">
+                    <label>Marital Status </label>
+                    <select class="form-control" data-live-search="true" title="Marital Status">
+                      <option>Single</option>
+                      <option>Married</option>
+                      <option>Divorced</option> 
+                      <option>Widowed</option>
+                      <option>Other</option>
+                    </select>
+                  </div>
+              </li> -->
+              <!-- <li>
+                  <div class="form-group">
+                    <label>Ethnicity </label>
+                    <select class="form-control" data-live-search="true" title="Select Ethnicity">
+                      <option>Ranchi</option> 
+                      <option>Other</option> 
+                    </select>
+                  </div>
+              </li> -->
+  
+          </ul> 
+      </div>
+       </div>
+   
+   
+            </div>
+            <div class="modal-footer text-center">
+              <div class="text-center">
+                <button type="button" class="btn bluebtn" ng-click="update()">Update</button>
+                <button type="button" class="btn bluebtn" data-dismiss="modal" ng-click="closemodal()">Close</button>
+              </div>
+            </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <div class="popupbg"></div>
+</div>
+
+<div class="loaderbg">
+  <div class="loading">
+    Loading
+  <span class="loading-dots">.</span>
+  <span class="loading-dots">.</span>
+  <span class="loading-dots">.</span>
+</div>
+</div>

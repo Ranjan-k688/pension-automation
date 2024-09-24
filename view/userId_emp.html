@@ -1,0 +1,198 @@
+<style>
+  .checkbox-option {
+    display: flex;
+    align-items: center;
+  }
+
+  .checkbox-option input {
+    margin-right: 5px;
+  }
+</style>
+<div  ng-controller="useridemp">
+  <div class="titles" data-aos="fade-up" data-aos-duration="1000">List of UserId Employee</div> 
+ 
+
+
+ <!-- <div class="tabletop fcs">
+  <div><button class="btn bluebtn" data-toggle="modal" data-target="#modalcompanydoc" data-backdrop="static" data-keyboard="false" ng-click="exportToExcel()"><i class="fa fa-download"></i> Download</button></div>                                 
+  <div class="searchfield searchbox" ng-if="searchCriteria && searchCriteria!='All'"><input class="form-control" type="text" value="" placeholder="Enter {{srchCriteria}}" style="width: 240px;" ng-model="frm.searchCriteriaVal"/> 
+         <button type="button" ng-click="searchPensionerDetails(searchCriteria,frm.searchCriteriaVal,'E');"><i class="fa fa-search"></i></button></div>
+                      
+            <div class="searchfield">
+           <select class="form-control" ng-model="searchCriteria" ng-options="search1.shortName as search1.displayName for search1 in masterdata | filter: { type: 'user_emp' }| orderBy:'displayName'"  ng-change="checkCharacterLengthInPixels(searchCriteria,'list')">
+               <option value=""  selected >Search By</option>
+             </select>
+       </div>
+        <div><button class="btn pensionerbtn"  ng-click="handleLink('application-user')">+ ADD EmployeeId</button></div>
+
+      </div> -->
+
+
+      <div class="tabletop fcs">
+        <div class="flexbox spacebox"> 
+       <div class="searchfield">
+         <select class="form-control" ng-model="searchCriteria" ng-options="search1.shortName as search1.displayName for search1 in masterdata | filter: { type: 'user_emp' }| orderBy:'displayName'">
+           <option value="" disabled selected >Search By</option>
+       </select>
+       </div>
+       <div class="searchfield searchbox" ng-if="searchCriteria && searchCriteria!='All'"><input class="form-control" type="text" value="" placeholder="Enter {{searchCriteria}}" style="width: 240px; " ng-model="frm.searchCriteriaVal"/> 
+         <button type="button" ng-click="searchPensionerDetails(searchCriteria,frm.searchCriteriaVal,'E');"><i class="fa fa-search"></i></button></div>
+         </div>
+         <div class="flexbox spacebox"> 
+         <div><button class="btn pensionerbtn"  ng-click="handleLink('application-user')">+ ADD EmployeeId</button></div> 
+       
+     <!-- <div><button class="btn bluebtn" data-toggle="modal" data-target="#modalcompanydoc" data-backdrop="static" data-keyboard="false" ng-click="exportToExcel()"><i class="fa fa-download"></i> Download</button></div> -->
+     </div>
+     </div>
+
+      <style>
+        .tablesec .table>tbody>tr>td{vertical-align: middle;}
+        .dropdd {
+          max-width: 150px !important; /* Set your desired maximum height */
+          }
+      </style>
+ <div class="tablesec">
+        <table class="table table-striped" id="exportTable">
+          <thead>
+            <tr>
+              <th width="120">User Id</th>
+              <th width="120">User Full Name</th>
+              <th width="120">Mobile No</th>
+              <th width="120">User Name</th>
+              <th width="120">Email Id</th>
+              <th width="120">statusCode</th>
+              <th width="100">Roles</th>
+              <th width="120">Action</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr ng-repeat="first in accountdetialData ">
+              <td>{{first.userId}}</td>
+              <td>{{first.userFullName}}</td>
+              <td>{{first.mobileNo}}</td>
+              <td>{{first.username}}</td>
+              <td>{{first.emailId}}</td>            
+              <td>
+                <select class="form-control" ng-model="first.statusCode">
+                  <option value="A">Active</option>
+                  <option value="I">Inactive</option>
+                </select>
+              </td>                     
+              <td>
+               
+                <select class="form-control dropdd"   ng-model="first.roleMasters" data-live-search="true" multiple required size="5">
+                <option value="{{x.roleCode}}" ng-repeat="x in roleData" >{{x.roleCode}} </option>
+
+              </select>
+            
+          </td>
+              
+              <td> 
+                <button class="btn bluebtn" data-toggle="modal" data-target="#deleteModal" data-placement="top"
+                title="Delete" style="color: aliceblue;padding: 3px;width:60px; font-size: 12px;" ng-click="setDeleteData(first)"> Update</button>
+                <!-- <button class="btn bluebtn" style="color: aliceblue;padding: 4px;width:60px" ng-click="update(first)">Update</button> -->
+                <!-- <button class="btn editbtn" data-toggle="modal" data-placement="top" title="Edit" ng-click="editData(x);  payDataById(x.pensionerId);"><i class="fa fa-pencil"></i></button> -->
+                 <button class="btn viewbtn" data-placement="top" title="View" ng-click="edit(first)"><i class="fa fa-eye" ></i></button>
+                <!-- <button class="btn deletebtn" data-toggle="modal" data-placement="top" title="Delete"><i class="fa fa-trash" ng-click="DeleteData(x.pensionerId,x.dateFrom,$index)"></i></button>  -->
+              </td>
+            </tr>
+           
+          </tbody>
+        </table>
+      </div>
+
+      <div class="modal fade" id="deleteModal" role="dialog" data-backdrop="static">
+        <div class="modal-dialog modal-sm">
+          <div class="modal-content">
+            <div class="modal-body">
+              <div class="formsec nobg">
+                <h4 class="modal-title text-center"> Are you sure, you want to Update this Id?</h4>                     
+                </div>
+                <div class="text-center">
+                  <button type="button" class="btn bluebtn " style="padding: 5px;width:70px;color: beige;" data-dismiss="modal">No</button>
+                  <button type="button" class="btn bluebtn" style="padding: 5px;width:70px;color: beige;" ng-click="update(deleteDataModel)">Yes</button>
+                </div>
+            </div>                 
+          </div>
+        </div>
+      </div>
+      
+<style>
+.boxsec{display: flex; justify-content: space-between; padding-bottom: 15px;}
+.boxsec .leftpic{ width: 250px; justify-content: center; text-align: center;font-weight: 600; border: 1px solid var(--light-blue);
+    border-radius: 5px;
+    padding: 15px;}
+ 
+    .boxsec .formsec {
+    width: calc(100% - 260px);
+     margin: 0;
+    border-radius: 5px; 
+}
+.boxsec .textview > strong{min-width:120px}
+.boxsec .formsec .list2 > li:last-child{width: 100%;}
+.fullname{font-size: 20px; }
+.phonenumber{color: var(--dark-blue); font-size: 16px; }
+.textview.rolelist{align-items:flex-start;}
+.rolelist > div{display: flex; flex-wrap: wrap; max-width:calc(100% - 120px);}
+.rolelist > div span { padding: 2px 10px; margin-right: 5px; margin-bottom: 5px; background: var(--white); border-radius: 4px;}
+</style>
+      <div class="modal fade" id="showUserModal" role="dialog" data-backdrop="static">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" ng-click="closemodal()">&times;</button>
+              <h4 class="modal-title">Application Info of Employee</h4>
+            </div>
+            <form name="showdetails">
+            <div class="modal-body">
+              <div class="boxsec">
+              <div class="leftpic">
+                <div class="leftview">
+                 <div class="userimg"><img ng-src="{{ showdetails.profile_image_name!=null ? 'https://ru-pension-attachment.s3.ap-south-1.amazonaws.com/profile_images/' + showdetails.profile_image_name : 'images/users.jpg' }}" alt="user" /></div>
+                 <div class="fullname">{{showdetails.userFullName}}</div>
+                 <div class="phonenumber"><i class="fa fa-phone"></i> {{showdetails.mobileNo}}</div>
+                </div>
+              </div>
+              <div class="formsec"> 
+                <ul class="formshow list2">     
+                           
+                  <li>
+                    <div class="textview">
+                      <strong >User Id</strong> <span>{{showdetails.userId}}</span>
+                    </div>
+                </li>  
+                    <li>
+                      <div class="textview">
+                        <strong >User Name</strong> <span>{{showdetails.username}}</span>
+                      </div>
+                  </li> 
+                    <li>
+                      <div class="textview">
+                        <strong >Email Id</strong> <span>{{showdetails.emailId}}</span>
+                      </div>
+                  </li>
+                  <li>
+                    <div class="textview">
+                      <strong >Status Code</strong> <span>{{showdetails.statusCode === 'A' ? 'Active' : 'Inactive'}}</span>
+                    </div>
+                  </li>
+             <li>
+                <div class="textview rolelist">
+                  <strong>Roles</strong> <div><span ng-repeat="x in showdetails.roleMasters">{{x}}</span></div>
+                </div>
+              </li>   
+            </ul>         
+                </div> 
+              </div>
+                <div class="text-center">
+                  <button type="button" class="btn bluebtn" data-dismiss="modal" ng-click="closemodal()">Close</button>
+                </div>
+              </form>
+            </div>           
+          </div>
+      </div>
+      
+
+</div>
+<div class="popupbg"></div>

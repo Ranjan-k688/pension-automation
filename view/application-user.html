@@ -1,0 +1,303 @@
+
+<style>
+.tab-container {display: flex;}
+.tab-label { margin-right: 5px; font-size: 16px; padding:8px 15px; background: var(--white);color:#ccc; cursor: pointer;  border-radius: 4px;}
+.tab-label:hover { background-color:var(--blue);color: var(--white);}
+.formsec label{font-weight:600;}
+input[type="radio"] {display: none;}
+input[type="radio"]:checked + .tab-label {background:var(--dark-blue); color: var(--white); }
+
+  .rollsec{padding:5px;}
+  .flexbox{display: flex; flex-wrap: wrap;background: #fff; border-radius: 4px; padding: 10px;}
+  .flexbox > div{ min-width:25%; padding-right:20px;}
+  .formsec .rollsec .flexbox label{font-weight: 500;}
+  .profileimg{ width: 34px; height: 34px;background: #fff; border-radius:4px; overflow: hidden;}
+.profileimg img{width: 100%; height: 100%; object-fit: contain;}
+</style>
+    <div ng-controller="applicationUserContrl">
+  <div class="titles">Application User Form </div>  
+<form  name="applicationUser"> 
+        
+      <div class="formsec">
+        <div class="tab-container">
+          <input type="radio" name="ep" id="employeeRadio" ng-model="selectedTypechk" ng-value="'employee'" ng-change="chk(); chk1();">
+          <label for="employeeRadio" class="tab-label">Employee</label>
+        
+          <input type="radio" name="ep" id="pensionerRadio" ng-model="selectedTypechk" ng-value="'pensioner'" ng-change="chk(); chk1();">
+          <label for="pensionerRadio" class="tab-label">Pensioner</label>
+        </div>
+    
+        <ul class="formshow list3"  >
+        
+            <li ng-if="!isOtherInputDisabled">
+              <div class="form-group">
+                <label class="">Pensioner Id </label>
+                <select class="form-control dropdd"  name="pensionerId"  ng-model="form.pensionerId" data-live-search="true" ng-disabled="flag" 
+                  ng-change="payDataById(form.pensionerId); clr();">
+                  <option value=""   >Select Pensioner Id</option>
+                  <option value={{x.id}} ng-repeat="x in allPensionersData">{{x.id}}-{{x.name_of_pensioner}}</option>
+                  </select>
+                  <!-- <style>
+                  /* dropdown with search */
+                  .custom-dropdown {position: relative;display: inline-block;width: 100%; }
+                  .dropdown-menu {width: 100%;padding: 0;margin: 0;border: 1px solid #ccc;max-height: 200px;overflow-y: auto;display: block;}
+                  .dropdown-menu input {width: 100%;padding: 8px;border: none;box-sizing: border-box;}
+                  .dropdown-menu li {list-style: none;padding: 8px;cursor: pointer;}
+                  .dropdown-menu li:hover {background-color: #f1f1f1;}
+                  .selected-option::after {content: '';position: absolute;right: 5px;top: 50%;width: 0;height: 0;border-left: 5px solid transparent;
+                  border-right: 5px solid transparent;border-top: 5px solid #000;transform: translateY(-50%);pointer-events: none;}
+                  .custom-dropdown.open .dropdown-menu {display: block;}
+                  /*end*/
+                </style>
+                  
+                      <div class="custom-dropdown form-control" ng-click="toggleDropdown()">
+                        <div class="selected-option">
+                          <span ng-if="!form.pensionerId">Select Pensioner Id</span>
+                          <span ng-if="form.pensionerId">{{form.pensionerId}}</span>
+                        </div>
+                        <ul class="dropdown-menu" ng-show="dropdownOpen">
+                          <li>
+                            <input type="text" class="form-control" ng-model="searchPensionerId" placeholder="Search Pensioner Id" ng-click="toggleDropdown()">
+                          </li>
+                          <li ng-click="selectPensioner()" ng-if="form.pensionerId">
+                            Select Pensioner Id                    
+                          </li>
+                          <li ng-repeat="x in allPensionersData | filter:searchPensionerId" ng-click="selectPensioner(x.id)">
+                            {{x.id}}
+                          </li>
+                        </ul>
+                      </div> -->
+                  
+              </div>
+          </li>
+
+            <li ng-if="form.employeeName">
+              <div class="form-group" >
+                <label class="required">Employee Name </label>
+                <input type="text" class="form-control"  placeholder="Employee name" name="employeeName"  ng-model="form.employeeName"  disabled/>
+              </div>
+          </li>  
+          <li ng-if="form.payCommissionCode">
+            <div class="form-group" ng-if="form.payCommissionCode">
+              <label class="required">PayCommision Code</label>
+              <select class="form-control" ng-model="form.payCommissionCode" name="payCommissionCode" data-live-search="true"  ng-options="x.payCommissionCode as x.dscr for x in payCommisionData" disabled>
+            </select>
+            </div>
+          </li>
+      <li ng-if="form.aadhaar">
+        <div class="form-group" >
+          <label class="required">Aadhar No.</label>
+          <input type="text" class="form-control"  placeholder="Aadhar No." name="aadhaar"  ng-model="form.aadhaar"  disabled/>
+        </div>
+    </li>
+    <li ng-if="form.pan">
+      <div class="form-group">
+        <label class="">Pan No</label>
+        <input type="text" class="form-control" placeholder="Pan No." name="pan" ng-model="form.pan" disabled />
+      </div>
+    </li>
+    <li ng-if="form.pensionerStatusCode || form.pensionerStatusCode=='0' ">
+      <div class="form-group">
+        <label class="required">Pensioner Status code</label>
+        <select class="form-control" ng-model="form.pensionerStatusCode" name="pensionerStatusCode"
+          data-live-search="true" ng-options="x.pensionerStatusCode as x.dscr for x in pensionerStatusData"
+          disabled>
+        </select>
+      </div>
+    </li>
+<li ng-if="form.collegeCode">
+  <div class="form-group" ng-if="form.collegeCode">
+    <label class="required">College</label>
+    <select class="form-control" ng-model="form.collegeCode" name="collegeCode" data-live-search="true" title="Select College" ng-options="x.collegeShortName as x.dscr for x in clgs" disabled>
+      <option value="" disabled selected>Select College</option>
+  </select>
+  </div>
+</li>
+<li ng-if="form.departmentCode">
+  <div class="form-group" ng-if="form.departmentCode">
+    <label class="required">Department</label>
+    <select class="form-control" ng-model="form.departmentCode" name="departmentCode" data-live-search="true" title="Select department" ng-options="x.deptShortName as x.dscr for x in depts" disabled>
+      <option value="" disabled selected>Select College</option>
+  </select>
+  
+  </div>
+</li>
+            <li>
+                <div class="form-group">
+                  <label class="required">User Full Name </label>
+                  <input type="text" class="form-control"  placeholder="User Full Name" name="userFullName" required ng-disabled="selectedTypechk=='pensioner'"  ng-model="form.userFullName" ng-disabled="flag"  ng-pattern="/^[a-zA-Z ]*$/" maximun="30"/>
+                </div>
+                <div class="error" ng-show="applicationUser.userFullName.$error.required && applicationUser.userFullName.$touched" style="color: red;">
+                  This field is required.
+                </div>
+                <div class="error" ng-show="applicationUser.userFullName.$error.pattern" style="color: red;">
+                  Only alphabetically are allowed.
+                </div>
+            </li>    
+ 
+        <li>
+          <div class="form-group">
+            <label class="required">Mobile No.</label>
+            <input type="text" class="form-control" placeholder="Mobile No" name="mobileNo" required  ng-disabled="selectedTypechk=='pensioner'"  ng-model="form.mobileNo" maxlength="10"  ng-pattern="/^[6-9]\d{9}$/" 
+            ng-blur="checkDuplicate('mobileNo',form.mobileNo)"/>
+          </div>
+          <div class="error" ng-show="applicationUser.mobileNo.$error.required && applicationUser.mobileNo.$touched" style="color: red;">
+            This field is required.
+          </div>
+          <div class="error" ng-show="applicationUser.mobileNo.$error.pattern "  style="color: red;">
+            Please enter Starting 6 to 9 valid 10-digit mobile number 
+        </div>
+        <div class="error" ng-show="mobileNodup"  style="color: red;">
+          Mobile Number already exist.
+        </div>
+      </li>  
+      <li>
+        <div class="form-group">
+          <label class="">Email Id</label>
+          <input type="text" class="form-control" placeholder="Email Id" name="emailId" ng-model="form.emailId" ng-disabled="selectedTypechk=='pensioner'" ng-pattern="/^[a-zA-Z0-9._%+-]+@gmail\.com$/"
+          ng-blur="checkDuplicate('emailId',form.emailId)"/>
+        </div>
+        <div class="error" ng-show="applicationUser.emailId.$error.required && applicationUser.emailId.$touched" style="color: red;">
+          This field is required.
+        </div>
+        <div class="error" ng-show="applicationUser.emailId.$error.pattern" style="color: red;">
+          Please enter a valid email address.
+        </div>
+        <div class="error" ng-show="emailIddup"  style="color: red;">
+          Email Id already exist.
+        </div>
+    </li> 
+    
+
+  <li ng-if="form.lastUserPassword">
+    <div class="form-group" >
+      <label class="">Last User Password</label>
+      <input type="text" class="form-control" placeholder="Last User Password" name="lastUserPassword"  ng-model="form.lastUserPassword" maxlength="10" />
+    </div>
+</li>
+  <li ng-if="selectedTypechk === 'employee'">
+  <div class="form-group" >
+    <label class="required">Admin User</label>
+    <select class="form-control" ng-model="form.adminUser" name="adminUser" required title="Select Admin User" >
+      <option value=""  >Select Admin User</option>
+      <option value="Y">Yes</option>
+      <option value="N">No</option>
+  </select>
+  </div>
+  <div class="error" ng-show="applicationUser.adminUser.$error.required && applicationUser.adminUser.$touched" style="color: red;">
+    This field is required.
+  </div>
+</li>
+
+<li>
+  <div class="form-group" >
+    <label class="required">Status Code</label>
+    <select class="form-control" ng-model="form.statusCode" name="statusCode"  title="Select Status Code" required >
+      <option value=""  >Select Status Code</option>
+      <option value="A">Active</option>
+      <option value="I">InActive</option>
+  </select>
+  </div>
+  <div class="error" ng-show="applicationUser.statusCode.$error.required && applicationUser.statusCode.$touched" style="color: red;">
+    This field is required.
+  </div>
+</li>
+
+<li>
+  <div class="form-group" >
+    <label class="required">Profile Image</label>
+    <div style="display: flex; align-items:center;">
+      <div><input type="file" ngf-select ng-model="selectedFile"  id="fileInput" class="form-control" ngf-change="previewImage()" accept="image/*" /></div>
+  <div class="profileimg" >
+      <img ng-src="{{imagePreview}}"  alt="Image Preview" id="blah"   /> 
+  </div>
+  </div>
+  </div>
+</li>
+
+  <li style="width: 100%;">
+    <style>  
+    .checkbox-wrapper-2 .ikxBAC {appearance: none; background-color: #b2b2b3; border-radius: 72px; border-style: none; flex-shrink: 0;
+      height: 20px; margin: 0; position: relative; width: 30px; }
+    .checkbox-wrapper-2 .ikxBAC::before {bottom: -6px;content: "";left: -6px;position: absolute;right: -6px;top: -6px;}
+    .checkbox-wrapper-2 .ikxBAC, .checkbox-wrapper-2 .ikxBAC::after {transition: all 100ms ease-out;}
+    .checkbox-wrapper-2 .ikxBAC::after {background-color: #fff;border-radius: 50%;content: "";height: 14px;left: 3px;position: absolute;
+      top: 3px;width: 14px;}
+    .checkbox-wrapper-2 input[type=checkbox] {cursor: pointer;}
+    .checkbox-wrapper-2 .ikxBAC:hover {background-color: #c9cbcd;transition-duration: 0s;}
+    .checkbox-wrapper-2 .ikxBAC:checked {background-color: var(--dark-blue);}
+    .checkbox-wrapper-2 .ikxBAC:checked::after {background-color: #fff;left: 13px;}
+    .checkbox-wrapper-2 :focus:not(.focus-visible) {outline: 0;}
+    .checkbox-wrapper-2 .ikxBAC:checked:hover {background-color: var(--blue);}
+    </style>
+
+        <div class="rollsec" ng-if="form.adminUser=='N'" name="roles" ng-required="true">
+        <label class="required">Roles</label>
+        <div class="flexbox" id="roleselect">
+            <div class="checkbox-wrapper-2" ng-repeat="role in roleData">
+                <label ng-if="role.dscr!='Admin'" style="display:flex">
+                    <input type="checkbox" style="margin-right: 5px;" class="sc-gJwTLC ikxBAC" ng-model="selectedRoles[$index]" ng-true-value="{{$index}}" ng-false-value="undefined">
+                    {{ role.dscr }}
+                </label>
+            </div>
+        </div>
+      </div>
+
+      <div class="error" ng-show="applicationUser.roles.$error.required && applicationUser.roles.$touched" style="color: red;">
+        At least one role must be selected.
+      </div>
+      </li>
+      <li style="width: 100%;">
+      <div class="text-center"> <button type="button" class="btn bluebtn" ng-click="saveapplicationUser(form,selectedTypechk); " >Submit</button>
+      </div>
+  </li>
+</ul> 
+
+
+</div>
+    <div ng-show="showSuccess" class="success-message">Data Posted Successfully!</div>
+    <div ng-show="showDelete" class="delete-message">Delete Data Successfully!</div>
+
+
+  </form>
+
+     <!-- data List -->
+        
+             
+      <!-- <div class="tabletop fcs">
+              <div><button class="btn bluebtn" data-toggle="modal" id="exportToExcel" data-backdrop="static" data-keyboard="false"><i class="fa fa-download"></i> Download</button></div> 
+              <div class="searchfield"><input class="form-control" type="text" value="" placeholder="Search" ng-model="searchId" value="" placeholder="Search By Id" /></div> 
+            </div> -->
+         <div class="tablesec" ng-if="hide">
+          <div class="titles lists" data-aos="fade-up" data-aos-duration="1000">Data List </div>
+                 <table class="table table-striped">
+                   <thead>
+                     <tr>
+                       <th width="120">User Full Name</th>
+                       <th width="120">Mobile No</th>
+                       <th width="120">Email Id</th>
+                       <th width="120">statusCode</th>
+                       <th width="120">Action</th>
+                     </tr>
+                   </thead>
+         
+                   <tbody>
+                     <tr ng-repeat="x in accountdetialData ">
+                       <td>{{x.userFullName}}</td>
+                       <td>{{x.mobileNo}}</td>
+                       <td>{{x.emailId}}</td>
+                       <!-- <td>{{x.statusCode}}</td> -->
+                       <td>{{ x.statusCode == 'A' ? 'Active' : 'InActive' }}</td>
+                       <td> 
+                         <button class="btn editbtn" data-toggle="modal" data-placement="top" title="Edit" ng-click="editData(x);  payDataById(x.pensionerId);"><i class="fa fa-pencil"></i></button>
+                         <!-- <button class="btn viewbtn" data-toggle="modal" data-placement="top" title="View"><i class="fa fa-eye"></i></button> -->
+                         <!-- <button class="btn deletebtn" data-toggle="modal" data-placement="top" title="Delete"><i class="fa fa-trash" ng-click="DeleteData(x.pensionerId,x.dateFrom,$index)"></i></button>  -->
+                       </td>
+                     </tr>                   
+                   </tbody>
+                 </table>
+               </div>
+         
+<!-- data list End -->
+ 
+     </div>

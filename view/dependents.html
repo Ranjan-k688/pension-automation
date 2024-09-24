@@ -1,0 +1,687 @@
+
+    <div ng-controller="dependents">
+  <div class="titles">Dependents Form </div>  
+ <form  name="Ddependent" novalidate> 
+    <div class="formsec">  
+      <h4>Dependent</h4>  
+        <ul class="formshow list3">
+            <li>
+                <div class="form-group">
+                  <label class="required">Pensioner Id</label>
+                  <select class="form-control dropdd" data-live-search="true" ng-options="pensioner.pensioner_id as pensioner.pensioner_id + ' - ' + pensioner.pensioner_name for pensioner in allPensionersData" name="pensionerId" required ng-model="form.pensionerId" 
+                  ng-change="payDataById(form.pensionerId); payDataById1(form.pensionerId)">
+                    <option value=""  selected >Select Pensioner Id</option>
+                    </select>
+                </div>
+                <div class="error" ng-show="Ddependent.pensionerId.$error.required && Ddependent.$submitted && !formSubmitted" style="color: red;">
+                  This field is required.
+                </div>
+            </li>
+
+            <li ng-if="form.employeeName">
+              <div class="form-group" >
+                <label class="required">Employee Name </label>
+                <input type="text" class="form-control"  placeholder="Employee name" name="employeeName"  ng-model="form.employeeName"  disabled/>
+              </div>
+          </li>  
+          <li ng-if="form.payCommissionCode">
+            <div class="form-group" >
+              <label class="required">PayCommision Code</label>
+              <!-- <input type="text" class="form-control"  placeholder="PayCommision Code" name="payCommissionCode"  ng-model="form.payCommissionCode" disabled /> -->
+              <select class="form-control" ng-model="form.payCommissionCode" name="payCommissionCode" required title="Select PayCommsion Change" disabled >
+                <option value=""  selected>Select PayCommsion code</option>
+                <option value={{x.payCommissionCode}} ng-repeat="x in payCommisionData" >{{x.dscr}}</option>
+              </select>
+            </div>
+        </li>
+            <li ng-if="form.aadhaar">
+              <div class="form-group" >
+                <label class="required">Aadhar No.</label>
+                <input type="text" class="form-control"  placeholder="Aadhar No." name="aadhaar"  ng-model="form.aadhaar"  disabled/>
+              </div>
+          </li>
+        <li ng-if="form.pensionerId">
+          <div class="form-group" >
+            <label class="">Pan No</label>
+            <input type="text" class="form-control"  placeholder="Pan No." name="pan"  ng-model="form.pan"  disabled />
+            <span ng-if="!form.pan">No record</span>
+          </div>
+        </li>
+
+        <li ng-if="form.pensionerStatusCode || form.pensionerStatusCode=='0' ">
+          <div class="form-group">
+            <label class="required">Pensioner Status code</label>
+            <select class="form-control" ng-model="form.pensionerStatusCode" name="pensionerStatusCode" data-live-search="true"  ng-options="x.pensionerStatusCode as x.dscr for x in pensionerStatusData" disabled>
+          </select>
+          </div>
+        </li>
+      <li ng-if="form.collegeCode">
+        <div class="form-group" ng-if="form.collegeCode">
+          <label class="required">College</label>
+          <select class="form-control" ng-model="form.collegeCode" name="collegeCode" data-live-search="true" title="Select College" ng-options="x.collegeShortName as x.dscr for x in clgs" disabled>
+            <option value="" disabled selected>Select College</option>
+        </select>
+        
+        </div>
+      </li>
+      <li ng-if="form.departmentCode">
+        <div class="form-group" ng-if="form.departmentCode">
+          <label class="required">Department</label>
+          <select class="form-control" ng-model="form.departmentCode" name="departmentCode" data-live-search="true" title="Select department" ng-options="x.deptShortName as x.dscr for x in depts" disabled>
+            <option value="" disabled selected>Select College</option>
+        </select> 
+        </div>
+      </li>
+      <li>
+        <div class="form-group">
+          <label class="required">Dependent Name</label>
+          <input type="text" class="form-control" placeholder="Name" name="dependent_name" required ng-model="form.dependentName" ng-pattern="/^[a-zA-Z ]*$/" maxlength="50" minlength="3"/>
+        </div>
+        <div class="error" ng-show="Ddependent.dependent_name.$error.required && Ddependent.$submitted && !formSubmitted" style="color: red;">
+          This field is required.
+        </div> 
+        <div class="error" ng-show="Ddependent.dependent_name.$error.pattern" style="color: red;">
+          Only alphabeticlly are allowed.
+        </div> 
+        <div class="error" ng-show="Ddependent.dependent_name.$error.minlength" style="color: red;">
+          Length should be minimum 3 and maximum 50 character.
+        </div>
+      </li>
+      <li>
+        <div class="form-group">
+          <label class="required">Pensioner Relation</label>
+          <select class="form-control" name="pensionerRelation" required ng-model="form.pensionerRelation">
+            <option value="">Select</option>
+            <option value={{x.pensionerRelation}} ng-repeat="x in relation" >{{x.pensionerRelation}}</option>
+          </select>
+        </div>
+        <div class="error" ng-show="Ddependent.pensioner_relation.$error.required && Ddependent.$submitted && !formSubmitted" style="color: red;">
+          This field is required.
+        </div> 
+      </li>
+      <li>
+        <div class="form-group">
+          <label class="required">Date Of Birth</label>
+          <input type="text" class="datepicker form-control" datepicker title="Select Date" required name="dateOfBirth" placeholder="Date Of Birth" ng-model="form.dateOfBirth" ng-disabled="mar" ng-change="validateDates()" />
+        </div>
+        <div class="error" ng-show="Ddependent.dateOfBirth.$error.required && Ddependent.$submitted && !formSubmitted" style="color: red;">
+          This field is required.
+        </div> 
+      </li>
+  
+      <li>
+        <div class="form-group">
+          <label class="required">Married</label>
+          <select class="form-control" name="married" required ng-model="form.married">
+            <option value="">Select</option>
+            <option value="Y">Yes</option>
+            <option value="N">No</option>
+          </select>
+        </div>
+        <div class="error" ng-show="Ddependent.married.$error.required && Ddependent.$submitted && !formSubmitted" style="color: red;">
+          This field is required.
+        </div> 
+      </li>
+      
+    <li ng-if="form.married==='Y'">
+      <div class="form-group">
+        <label class="">Date Of Marriage</label>
+        <input type="text" class="datepicker form-control" name="dateOfMarriage" datepicker title="Select Date" placeholder="Date Of Marriage" ng-model="form.dateOfMarriage" ng-disabled="mar" ng-change="validateDates()" />
+      </div>
+      <div class="error" ng-show="Ddependent.dateOfMarriage.$error.required && Ddependent.$submitted && !formSubmitted" style="color: red;">
+        This field is required.
+      </div> 
+    </li>
+      <li>
+        <div class="form-group">
+          <label class="required">Pension Nominee</label>
+          <select class="form-control" name="pensionNominee" required   ng-model="form.pensionNominee">
+            <option value="">Select</option>
+            <option value="Y">Yes</option>
+            <option value="N">No</option>
+          </select>
+        </div>
+        <div class="error" ng-show="Ddependent.pensionNominee.$error.required && Ddependent.$submitted && !formSubmitted" style="color: red;">
+          This field is required.
+        </div> 
+      </li> 
+    <li>
+      <div class="form-group">
+        <label class="required">Pension Percentage</label>
+        <input type="text" class="form-control" placeholder="Pension Percentage" name="pension_perc" required ng-model="form.pensionPerc" ng-pattern="/^[0-9.]*$/" maxlength="5" ng-blur="calculate(form.pensionPerc)"/>
+      </div>
+      <div class="error" ng-show="Ddependent.pension_perc.$error.required && Ddependent.$submitted && !formSubmitted" style="color: red;">
+        This field is required.
+      </div> 
+      <div class="error" ng-show="Ddependent.pension_perc.$error.pattern" style="color: red;">
+        Only Numeric are allowed.
+      </div>
+      <div class="error" ng-show="amountErrors" style="color: red;">
+       All Ddependents Percentage should not be greater then 100.
+    </div> 
+    </li>
+      <li>
+        <div class="form-group">
+          <label class="required">Dependent Pin No.</label>
+          <input type="text" class="form-control" placeholder="Pin No." name="dependent_pin" required ng-model="form.dependentPin" ng-pattern="/^[0-9]*$/" maxlength="6" minlength="6" ng-blur="getaddress(form.dependentPin,'D')" />
+        </div>
+        <div class="error" ng-show="Ddependent.dependent_pin.$error.required && Ddependent.$submitted && !formSubmitted" style="color: red;">
+          This field is required.
+        </div> 
+        <div class="error" ng-show="Ddependent.dependent_pin.$error.pattern" style="color: red;">
+          Only Numeric are allowed.
+        </div>
+        <div class="error" ng-show="Ddependent.dependent_pin.$error.minlength" style="color: red;">
+          Length should be minimum 6 and maximum 6 character.
+        </div>
+      </li>
+      <li>
+        <div class="form-group">
+          <label class="required">Dependent Address</label>
+          <input type="text" class="form-control" placeholder="Address" name="dependent_address" required ng-model="form.dependentAddress" ng-pattern="/^[a-zA-Z0-9 ]*$/" maxlength="100" />
+        </div>
+        <div class="error" ng-show="Ddependent.dependent_address.$error.required && Ddependent.$submitted && !formSubmitted" style="color: red;">
+          This field is required.
+        </div> 
+        <div class="error" ng-show="Ddependent.dependent_address.$error.pattern" style="color: red;">
+          Only AlphaNumeric are allowed.
+        </div>
+      </li>
+      <li>
+        <div class="form-group">
+          <label class="">Dependent Police Station</label>
+          <input type="text" class="form-control" placeholder="Police Station" name="dependent_ps"  ng-model="form.dependentPs" ng-pattern="/^[a-zA-Z ]*$/" maxlength="20" />
+        </div>
+        <div class="error" ng-show="Ddependent.dependent_ps.$error.required && Ddependent.$submitted && !formSubmitted" style="color: red;">
+          This field is required.
+        </div> 
+        <div class="error" ng-show="Ddependent.dependent_ps.$error.pattern" style="color: red;">
+          Only AlphaNumeric are allowed.
+        </div>
+      </li>
+      <li>
+        <div class="form-group">
+          <label class="">Dependent Post Office</label>
+          <select class="form-control" ng-model="form.dependentPo"  name="dependent_po" title="Select Post Office">
+            <option value="" readonly selected>Post Office</option>
+            <option ng-repeat="post in dependentPostoffice" value="{{post.Name}}">{{post.Name}}</option>
+          </select>
+        </div>
+        <div class="error" ng-show="Ddependent.dependent_po.$error.required && Ddependent.$submitted && !formSubmitted" style="color: red;">
+          This field is required.
+        </div> 
+        <div class="error" ng-show="Ddependent.dependent_po.$error.pattern" style="color: red;">
+          Only AlphaNumeric are allowed.
+        </div>
+      </li>
+      <li>
+        <div class="form-group">
+          <label class="required">Dependent City</label>
+          <input type="text" class="form-control" placeholder="City" name="dependent_city" required ng-model="form.dependentCity" ng-pattern="/^[a-zA-Z ]*$/" maxlength="20" />
+        </div>
+        <div class="error" ng-show="Ddependent.dependent_city.$error.required && Ddependent.$submitted && !formSubmitted" style="color: red;">
+          This field is required.
+        </div> 
+        <div class="error" ng-show="Ddependent.dependent_city.$error.pattern" style="color: red;">
+          Only alphabeticlly are allowed.
+        </div>
+      </li>
+      <li>
+        <div class="form-group">
+          <label class="required">Dependent State</label>
+          <input type="text" class="form-control" placeholder="State" name="dependent_state" required ng-model="form.dependentState" ng-pattern="/^[a-zA-Z ]*$/" maxlength="20" />
+        </div>
+        <div class="error" ng-show="Ddependent.dependent_state.$error.required && Ddependent.$submitted && !formSubmitted" style="color: red;">
+          This field is required.
+        </div> 
+        <div class="error" ng-show="Ddependent.dependent_state.$error.pattern" style="color: red;">
+          Only alphabeticlly are allowed.
+        </div>
+      </li>
+      <li>
+        <div class="form-group">
+          <label class="required">Dependent Country</label>
+          <input type="text" class="form-control" placeholder="Country" name="dependent_country" required ng-model="form.dependentCountry" ng-pattern="/^[a-zA-Z ]*$/" maxlength="20" />
+        </div>
+        <div class="error" ng-show="Ddependent.dependent_country.$error.required && Ddependent.$submitted && !formSubmitted" style="color: red;">
+          This field is required.
+        </div> 
+        <div class="error" ng-show="Ddependent.dependent_country.$error.pattern" style="color: red;">
+          Only alphabeticlly are allowed.
+        </div>
+      </li>
+      <li>
+        <div class="form-group">
+          <label class="required">Dependent Valid</label>
+          <select class="form-control" name="dependent_valid" required   ng-model="form.dependentValid">
+            <option value="">Select</option>
+            <option value="Y">Yes</option>
+            <option value="N">No</option>
+          </select>
+        </div>
+        <div class="error" ng-show="Ddependent.dependent_valid.$error.required && Ddependent.$submitted && !formSubmitted" style="color: red;">
+          This field is required.
+        </div> 
+      </li>
+       <li>
+        <div class="form-group">
+          <label class="required">Divyang code</label>
+        <select class="form-control" name="phyHandicappedCode" required   ng-model="form.phyHandicappedCode">
+          <option value="">Select</option>
+          <option value={{x.phyHandicappedCode}} ng-repeat="x in phyHandicaped">{{x.phyHandicappedCode}}-{{x.dscr}}</option>
+        </select>
+        </div>
+        <div class="error" ng-show="Ddependent.phyHandicappedCode.$error.required && Ddependent.$submitted && !formSubmitted" style="color: red;">
+          This field is required.
+        </div> 
+      </li>  
+</ul>
+</div>
+<div  class="formsec" style="background: #f9f0e1;">
+  <h4>Dependent Minor</h4>
+  <div class="form-group">
+    <label class="required">Minor ?</label><br>
+    <input type="radio" ng-model="form.minorDependent" value="Y"> Yes
+    <input type="radio" ng-model="form.minorDependent" value="N"> No
+  </div>
+  <div class="error" ng-show="Ddependent.pension_nominee.$error.required && Ddependent.$submitted && !formSubmitted" style="color: red;">
+    This field is required.
+  </div> 
+
+ <ul ng-if="form.minorDependent === 'Y'" class="formshow list3">
+
+            <li>
+              <div class="form-group">
+                <label class="required">Name</label>
+                <input type="text" class="form-control" placeholder="Name" name="minorGuardianName" required ng-model="form.minorGuardianName" ng-pattern="/^[a-zA-Z ]*$/" maxlength="50" />
+              </div>
+              <div class="error" ng-show="Ddependent.minorGuardianName.$error.required && Ddependent.$submitted && !formSubmitted" style="color: red;">
+                This field is required.
+              </div> 
+              <div class="error" ng-show="Ddependent.minorGuardianName.$error.pattern" style="color: red;">
+                Only alphabeticlly are allowed.
+              </div>
+          </li>
+        <li>
+          <div class="form-group">
+            <label class="required">Date Of Birth</label>
+            <input type="text" class="datepicker form-control" name="minorGuardianDob" required datepicker title="Select Date" placeholder="Date Of Birth" ng-model="form.minorGuardianDob" />
+          </div>
+          <div class="error" ng-show="Ddependent.minorGuardianDob.$error.required && Ddependent.$submitted && !formSubmitted" style="color: red;">
+            This field is required.
+          </div> 
+      </li>
+
+        <li>
+          <div class="form-group">
+            <label class="required">Pin No.</label>
+            <input type="text" class="form-control" placeholder="Pin No." name="minorGuardianPin" required ng-model="form.minorGuardianPin" ng-pattern="/^[0-9]*$/" maxlength="6" minlength="6" ng-blur="getaddress(form.minorGuardianPin,'M')" />
+          </div>
+          <div class="error" ng-show="Ddependent.minorGuardianPin.$error.required && Ddependent.$submitted && !formSubmitted" style="color: red;">
+            This field is required.
+          </div> 
+          <div class="error" ng-show="Ddependent.minorGuardianPin.$error.pattern" style="color: red;">
+            Only numeric are allowed.
+          </div>
+          <div class="error" ng-show="Ddependent.minorGuardianPin.$error.minlength" style="color: red;">
+            Length should be minimum 6 and maximum 6 character.
+          </div>
+        </li>
+        <li>
+          <div class="form-group">
+            <label class="required">Address</label>
+            <input type="text" class="form-control" placeholder="Address" name="minorGuardianAddress" required ng-model="form.minorGuardianAddress" ng-pattern="/^[a-zA-Z0-9 ]*$/" maxlength="50" />
+          </div>
+          <div class="error" ng-show="Ddependent.minorGuardianAddress.$error.required && Ddependent.$submitted && !formSubmitted" style="color: red;">
+            This field is required.
+          </div> 
+          <div class="error" ng-show="Ddependent.minorGuardianAddress.$error.pattern" style="color: red;">
+            Only alphaNumeric are allowed.
+          </div>
+      </li>
+      <li>
+        <div class="form-group">
+          <label class="required">Police Station</label>
+          <input type="text" class="form-control" placeholder="Police Station" name="minorGuardianPs" required ng-model="form.minorGuardianPs" ng-pattern="/^[a-zA-Z ]*$/" maxlength="20" />
+        </div>
+        <div class="error" ng-show="Ddependent.minorGuardianPs.$error.required && Ddependent.$submitted && !formSubmitted" style="color: red;">
+          This field is required.
+        </div>
+        <div class="error" ng-show="Ddependent.minorGuardianPs.$error.pattern" style="color: red;">
+          Only alphaNumeric are allowed.
+        </div> 
+    </li>
+    <li>
+      <div class="form-group">
+        <label class="required">Post Office</label>
+        <!-- <input type="text" class="form-control" placeholder="Post Office" name="minorGuardianPo" required ng-model="form.minorGuardianPo" ng-pattern="/^[a-zA-Z ]*$/" maxlength="20" /> -->
+        <select class="form-control" ng-model="form.minorGuardianPo" required name="minorGuardianPo" title="Select Post Office">
+          <option value="" readonly selected>Post Office</option>
+          <option ng-repeat="post in minorGuardianPostoffice" value="{{post.Name}}">{{post.Name}}</option>
+        </select>
+      </div>
+      <div class="error" ng-show="Ddependent.minorGuardianPo.$error.required && Ddependent.$submitted && !formSubmitted" style="color: red;">
+        This field is required.
+      </div>
+      <div class="error" ng-show="Ddependent.minorGuardianPo.$error.pattern" style="color: red;">
+        Only alphaNumeric are allowed.
+      </div> 
+  </li>
+        <li>
+          <div class="form-group">
+            <label class="required">City</label>
+            <input type="text" class="form-control" placeholder="City" name="minorGuardianCity" required ng-model="form.minorGuardianCity" ng-pattern="/^[a-zA-Z ]*$/" maxlength="20" />
+          </div>
+          <div class="error" ng-show="Ddependent.minorGuardianCity.$error.required && Ddependent.$submitted && !formSubmitted" style="color: red;">
+            This field is required.
+          </div>
+          <div class="error" ng-show="Ddependent.minorGuardianCity.$error.pattern" style="color: red;">
+            Only alphabeticlly are allowed.
+          </div> 
+        </li>
+
+        <li>
+          <div class="form-group">
+            <label class="required">State</label>
+            <input type="text" class="form-control" placeholder="State" name="minorGuardianState" required ng-model="form.minorGuardianState" ng-pattern="/^[a-zA-Z ]*$/" maxlength="20" />
+          </div>
+          <div class="error" ng-show="Ddependent.minorGuardianState.$error.required && Ddependent.$submitted && !formSubmitted" style="color: red;">
+            This field is required.
+          </div> 
+          <div class="error" ng-show="Ddependent.minorGuardianState.$error.pattern" style="color: red;">
+            Only alphabeticlly are allowed.
+          </div>
+        </li>
+        <li>
+          <div class="form-group">
+            <label class="required">Country</label>
+            <input type="text" class="form-control" placeholder="Country" name="minorGuardianCountry" required ng-model="form.minorGuardianCountry" ng-pattern="/^[a-zA-Z ]*$/" maxlength="20" />
+          </div>
+          <div class="error" ng-show="Ddependent.minorGuardianCountry.$error.required && Ddependent.$submitted && !formSubmitted" style="color: red;">
+            This field is required.
+          </div> 
+          <div class="error" ng-show="Ddependent.minorGuardianCountry.$error.pattern" style="color: red;">
+            Only alphabeticlly are allowed.
+          </div>
+      </li>
+    </ul>
+</div>
+
+<div class="formsec"> 
+  <h4>Alternate Nominee</h4>
+<ul class="formshow list3">
+    <li>
+      <div class="form-group">
+        <label class="">Name</label>
+        <input type="text" class="form-control" placeholder="Name" name="alternateNomineeName"  ng-model="form.alternateNomineeName" ng-pattern="/^[a-zA-Z ]*$/" maxlength="50" />
+      </div>
+      <div class="error" ng-show="Ddependent.alternateNomineeName.$error.required && Ddependent.$submitted && !formSubmitted" style="color: red;">
+        This field is required.
+      </div>
+      <div class="error" ng-show="Ddependent.alternateNomineeName.$error.pattern" style="color: red;">
+        Only alphabeticlly are allowed.
+      </div> 
+    </li>
+    <li>
+      <div class="form-group">
+        <label class=""> Relation</label>
+        <select class="form-control" name="alternateNomineeRelation"    ng-model="form.alternateNomineeRelation">
+          <option value="">Select</option>
+          <option value={{x.pensionerRelation}} ng-repeat="x in relation" >{{x.pensionerRelation}}</option>
+        </select>
+      </div>
+      <div class="error" ng-show="Ddependent.alternateNomineeRelation.$error.required && Ddependent.$submitted && !formSubmitted" style="color: red;">
+        This field is required.
+      </div> 
+    </li>
+    <li>
+      <div class="form-group">
+        <label class=""> Percentage</label>
+        <input type="text" class="form-control" placeholder="Percentage" name="alternatePensionPerc"  ng-model="form.alternatePensionPerc" ng-pattern="/^[0-9.]*$/" maxlength="5" />
+      </div>
+      <div class="error" ng-show="Ddependent.alternatePensionPerc.$error.required && Ddependent.$submitted && !formSubmitted" style="color: red;">
+        This field is required.
+      </div> 
+      <div class="error" ng-show="Ddependent.alternatePensionPerc.$error.pattern" style="color: red;">
+        Only numeric are allowed.
+      </div> 
+    </li>
+
+    <li>
+      <div class="form-group">
+        <label class=""> Dob</label>
+        <input type="text" class="datepicker form-control" datepicker  title="Select Date" placeholder="Date Of Birth" name="alternateNomineeDob" ng-model="form.alternateNomineeDob" ng-disabled="mar" ng-change="validateDates()" />
+      </div>
+      <div class="error" ng-show="Ddependent.alternateNomineeDob.$error.required && Ddependent.$submitted && !formSubmitted" style="color: red;">
+        This field is required.
+      </div> 
+    </li>
+    <li>
+      <div class="form-group">
+        <label class=""> Pin No.</label>
+        <input type="text" class="form-control" placeholder="Pin No." name="alternateNomineePin"  ng-model="form.alternateNomineePin" ng-pattern="/^[0-9]*$/" maxlength="6" minlength="6" ng-change="getaddress(form.alternateNomineePin,'N')" />
+      </div>
+      <div class="error" ng-show="Ddependent.alternateNomineePin.$error.required && Ddependent.$submitted && !formSubmitted" style="color: red;">
+        This field is required.
+      </div> 
+      <div class="error" ng-show="Ddependent.alternateNomineePin.$error.pattern" style="color: red;">
+        Only numeric are allowed.
+      </div> 
+      <div class="error" ng-show="Ddependent.alternateNomineePin.$error.minlength" style="color: red;">
+        Length should be minimum 6 and maximum 6 character.
+      </div>     
+    </li>
+    <li>
+      <div class="form-group">
+        <label class=""> Address</label>
+        <input type="text" class="form-control" placeholder="Address" name="alternateNomineeAddress"  ng-model="form.alternateNomineeAddress" ng-pattern="/^[a-zA-Z0-9 ]*$/" maxlength="100" />
+      </div>
+      <div class="error" ng-show="Ddependent.alternateNomineeAddress.$error.required && Ddependent.$submitted && !formSubmitted" style="color: red;">
+        This field is required.
+      </div> 
+      <div class="error" ng-show="Ddependent.alternateNomineeAddress.$error.pattern" style="color: red;">
+        Only alphabeticlly are allowed.
+      </div> 
+    </li>
+    <li>
+      <div class="form-group">
+        <label class=""> Police Station</label>
+        <input type="text" class="form-control" placeholder="Police Station" name="alternateNomineePs"  ng-model="form.alternateNomineePs" ng-pattern="/^[a-zA-Z ]*$/" maxlength="20" />
+      </div>
+      <div class="error" ng-show="Ddependent.alternateNomineePs.$error.required && Ddependent.$submitted && !formSubmitted" style="color: red;">
+        This field is required.
+      </div> 
+      <div class="error" ng-show="Ddependent.alternateNomineePs.$error.pattern" style="color: red;">
+        Only alphabeticlly are allowed.
+      </div> 
+    </li>
+    <li>
+      <div class="form-group">
+        <label class=""> Post Office</label>
+        <!-- <input type="text" class="form-control" placeholder="Post Office" name="alternateNomineePo"  ng-model="form.alternateNomineePo" ng-pattern="/^[a-zA-Z ]*$/" maxlength="20" /> -->
+        <select class="form-control" ng-model="form.alternateNomineePo"  name="alternateNomineePo" title="Select Post Office">
+          <option value="" readonly selected>Post Office</option>
+          <option ng-repeat="post in alternateNomineePostoffice" value="{{post.Name}}">{{post.Name}}</option>
+        </select>
+      </div>
+      <div class="error" ng-show="Ddependent.alternateNomineePo.$error.required && Ddependent.$submitted && !formSubmitted" style="color: red;">
+        This field is required.
+      </div> 
+      <div class="error" ng-show="Ddependent.alternateNomineePo.$error.pattern" style="color: red;">
+        Only alphabeticlly are allowed.
+      </div> 
+    </li>
+    <li>
+      <div class="form-group">
+        <label class=""> City</label>
+        <input type="text" class="form-control" placeholder="City" name="alternateNomineeCity"  ng-model="form.alternateNomineeCity" ng-pattern="/^[a-zA-Z ]*$/" maxlength="50" />
+      </div>
+      <div class="error" ng-show="Ddependent.alternateNomineeCity.$error.required && Ddependent.$submitted && !formSubmitted" style="color: red;">
+        This field is required.
+      </div> 
+      <div class="error" ng-show="Ddependent.alternateNomineeCity.$error.pattern" style="color: red;">
+        Only alphabeticlly are allowed.
+      </div> 
+    </li>
+    <li>
+      <div class="form-group">
+        <label class=""> State</label>
+        <input type="text" class="form-control" placeholder="State" name="alternateNomineeState"  ng-model="form.alternateNomineeState" ng-pattern="/^[a-zA-Z ]*$/" maxlength="20" />
+      </div>
+      <div class="error" ng-show="Ddependent.alternateNomineeState.$error.required && Ddependent.$submitted && !formSubmitted" style="color: red;">
+        This field is required.
+      </div> 
+      <div class="error" ng-show="Ddependent.alternateNomineeState.$error.pattern" style="color: red;">
+        Only alphabeticlly are allowed.
+      </div> 
+    </li>
+    <li>
+      <div class="form-group">
+        <label class=""> Country</label>
+        <input type="text" class="form-control" placeholder="Country" name="alternateNomineeCountry"  ng-model="form.alternateNomineeCountry" ng-pattern="/^[a-zA-Z ]*$/" maxlength="20" />
+      </div>
+      <div class="error" ng-show="Ddependent.alternateNomineeCountry.$error.required && Ddependent.$submitted && !formSubmitted" style="color: red;">
+        This field is required.
+      </div>
+      <div class="error" ng-show="Ddependent.alternateNomineeCountry.$error.pattern" style="color: red;">
+        Only alphabeticlly are allowed.
+      </div>  
+    </li>
+ </ul>
+</div> 
+ 
+<div class="formsec" style="background: #f9f0e1;"> 
+  <h4>Alternate Nominee Minor</h4>
+    <div class="form-group">
+      <label class="required">Minor ?</label><br>
+      <input type="radio" ng-model="form.alternateNomineeMinor" value="Y"> Yes
+      <input type="radio" ng-model="form.alternateNomineeMinor" value="N"> No
+    </div>
+    <div class="error" ng-show="Ddependent.alternateNomineeMinor.$error.required && Ddependent.$submitted && !formSubmitted" style="color: red;">
+      This field is required.
+    </div> 
+    <ul ng-if="form.alternateNomineeMinor === 'Y'" class="formshow list3">
+        <li>
+          <div class="form-group">
+            <label class="required">Name</label>
+            <input type="text" class="form-control" placeholder="Name" name="alternateNomGuardianName" required ng-model="form.alternateNomGuardianName" ng-pattern="/^[a-zA-Z ]*$/" maxlength="50" />
+          </div>
+          <div class="error" ng-show="Ddependent.alternateNomGuardianName.$error.required && Ddependent.$submitted && !formSubmitted" style="color: red;">
+            This field is required.
+          </div> 
+          <div class="error" ng-show="Ddependent.alternateNomGuardianName.$error.pattern" style="color: red;">
+            Only alphabeticlly are allowed.
+          </div> 
+        </li>
+        <li>
+          <div class="form-group">
+            <label class="required">Date Of Birth</label>
+            <input type="text" class="datepicker form-control" required datepicker title="Select Date" name="alternateNomGuardDob" placeholder="Date Of Birth" ng-model="form.alternateNomGuardDob" ng-disabled="mar" ng-change="validateDates()" />
+          </div>
+          <div class="error" ng-show="Ddependent.alternateNomGuardDob.$error.required && Ddependent.$submitted && !formSubmitted" style="color: red;">
+            This field is required.
+          </div> 
+        </li>
+        <li>
+          <div class="form-group">
+            <label class="required">Pin No.</label>
+            <input type="text" class="form-control" placeholder="Pin No." name="alternateNameGuardPin" required ng-model="form.alternateNameGuardPin" ng-pattern="/^[0-9]*$/" maxlength="6" minlength="6" ng-change="getaddress(form.alternateNameGuardPin,'A')" />
+          </div>
+          <div class="error" ng-show="Ddependent.alternateNameGuardPin.$error.required && Ddependent.$submitted && !formSubmitted" style="color: red;">
+            This field is required.
+          </div>
+          <div class="error" ng-show="Ddependent.alternateNameGuardPin.$error.pattern" style="color: red;">
+            Only alphabeticlly are allowed.
+          </div>  
+          <div class="error" ng-show="Ddependent.alternateNameGuardPin.$error.minlength" style="color: red;">
+            Length should be minimum 6 and maximum 6 character.
+          </div>        
+        </li>
+        <li>
+          <div class="form-group">
+            <label class="required">Address</label>
+            <input type="text" class="form-control" placeholder="Address" name="alternateNomGuardAddress" required ng-model="form.alternateNomGuardAddress" ng-pattern="/^[a-zA-Z0-9 ]*$/" maxlength="100" />
+          </div>
+          <div class="error" ng-show="Ddependent.alternateNomGuardAddress.$error.required && Ddependent.$submitted && !formSubmitted" style="color: red;">
+            This field is required.
+          </div> 
+          <div class="error" ng-show="Ddependent.alternateNomGuardAddress.$error.pattern" style="color: red;">
+            Only alphaNumeric are allowed.
+          </div> 
+        </li>
+        <li>
+          <div class="form-group">
+            <label class="required">Police Station</label>
+            <input type="text" class="form-control" placeholder="Police Station" name="alternateNomGuardPs" required ng-model="form.alternateNomGuardPs" ng-pattern="/^[a-zA-Z ]*$/" maxlength="20" />
+          </div>
+          <div class="error" ng-show="Ddependent.alternateNomGuardPs.$error.required && Ddependent.$submitted && !formSubmitted" style="color: red;">
+            This field is required.
+          </div> 
+          <div class="error" ng-show="Ddependent.alternateNomGuardPs.$error.pattern" style="color: red;">
+            Only alphabeticlly are allowed.
+          </div> 
+        </li>
+        <li>
+          <div class="form-group">
+            <label class="required">Post Office</label>
+            <!-- <input type="text" class="form-control" placeholder="Post office" name="alternateNomGuardPo" required ng-model="form.alternateNomGuardPo" ng-pattern="/^[a-zA-Z ]*$/" maxlength="20" /> -->
+            <select class="form-control" ng-model="form.alternateNomGuardPo" required name="alternateNomGuardPo" title="Select Post Office">
+              <option value="" readonly selected>Post Office</option>
+              <option ng-repeat="post in alternateNomGuardPostoffice" value="{{post.Name}}">{{post.Name}}</option>
+            </select>
+          </div>
+          <div class="error" ng-show="Ddependent.alternateNomGuardPo.$error.required && Ddependent.$submitted && !formSubmitted" style="color: red;">
+            This field is required.
+          </div> 
+          <div class="error" ng-show="Ddependent.alternateNomGuardPo.$error.pattern" style="color: red;">
+            Only alphabeticlly are allowed.
+          </div> 
+        </li>
+        <li>
+          <div class="form-group">
+            <label class="required">City</label>
+            <input type="text" class="form-control" placeholder="City" name="alternateNomGuardCity" required ng-model="form.alternateNomGuardCity" ng-pattern="/^[a-zA-Z ]*$/" maxlength="20" />
+          </div>
+          <div class="error" ng-show="Ddependent.alternateNomGuardCity.$error.required && Ddependent.$submitted && !formSubmitted" style="color: red;">
+            This field is required.
+          </div> 
+          <div class="error" ng-show="Ddependent.alternateNomGuardCity.$error.pattern" style="color: red;">
+            Only alphabeticlly are allowed.
+          </div> 
+        </li>
+        <li>
+          <div class="form-group">
+            <label class="required">State</label>
+            <input type="text" class="form-control" placeholder="State" name="alternateNameGuardState" required ng-model="form.alternateNameGuardState" ng-pattern="/^[a-zA-Z ]*$/" maxlength="20" />
+          </div>
+          <div class="error" ng-show="Ddependent.alternateNameGuardState.$error.required && Ddependent.$submitted && !formSubmitted" style="color: red;">
+            This field is required.
+          </div>
+          <div class="error" ng-show="Ddependent.alternateNameGuardState.$error.pattern" style="color: red;">
+            Only alphabeticlly are allowed.
+          </div>  
+        </li>
+        <li>
+          <div class="form-group">
+            <label class="required">Country</label>
+            <input type="text" class="form-control" placeholder="Country" name="alternateNameGuardCountry" required ng-model="form.alternateNameGuardCountry" ng-pattern="/^[a-zA-Z ]*$/" maxlength="20" />
+          </div>
+          <div class="error" ng-show="Ddependent.alternateNameGuardCountry.$error.required && Ddependent.$submitted && !formSubmitted" style="color: red;">
+            This field is required.
+          </div> 
+          <div class="error" ng-show="Ddependent.alternateNameGuardCountry.$error.pattern" style="color: red;">
+            Only alphabeticlly are allowed.
+          </div> 
+        </li>
+    </ul>
+</div>   
+    
+
+</ul> 
+    <div style="text-align: center;"> <button type="button" class="btn bluebtn" ng-disabled="Ddependent.$invalid" ng-click="saveDependents(form)">Submit</button></div>
+    <div ng-show="showSuccess" class="success-message">Data Posted Successfully!</div>
+    <div ng-show="showDelete" class="delete-message">Delete Data Successfully!</div>
+
+
+  </form>
+     </div>

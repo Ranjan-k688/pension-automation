@@ -1,0 +1,232 @@
+<div  ng-controller="hraReport">
+  <div class="titles" data-aos="fade-up" data-aos-duration="1000">HRA Report</div> 
+  <div class="tabletop fcs"> 
+    <div></div>   
+ <!-- <div><button class="btn bluebtn" data-toggle="modal" data-target="#modalcompanydoc" data-backdrop="static" data-keyboard="false" ng-click="exportToExcel('list')"><i class="fa fa-download"></i> Download</button></div> -->
+ </div>
+  <form  name="generateAdvice"> 
+    <div class="formsec">    
+        <ul class="formshow list3">
+ 
+            <li>
+                <div class="form-group">
+                  <label class="required">Select Year</label>
+                  <input type="text" class="datepicker form-control" autocomplete="off" year-picker placeholder="Select Year" name="year" required ng-model="form.year" maxlength="15" ng-disabled="flag"/>
+                </div>
+                <div class="error" ng-show="generateAdvice.year.$error.required && generateAdvice.year.$touched && !formSubmitted" style="color: red;">
+                  This field is required.
+                </div>
+                <div class="error" ng-show="generateAdvice.pensionerId.$error.maxlength"  style="color: red;">
+                  Only  15 characters are allowed.
+              </div>
+            </li>
+            <li>
+                <div class="form-group">
+                  <label class="required">Select Month</label>
+                  <select class="form-control" name="month" required ng-model="form.month" ng-disabled="flag">
+                    <option value="" selected>Select Month</option>
+                    <option ng-repeat="month in availableMonths" value="{{month.value}}">{{month.name}}</option>
+                  </select>
+                
+                </div>
+                <div class="error" ng-show="generateAdvice.month.$error.required && generateAdvice.month.$touched && !formSubmitted" style="color: red;">
+                  This field is required.
+                </div>
+            </li> 
+           
+        </ul> 
+    </div>
+    <div class="text-center">
+      <button type="button" class="btn bluebtn" ng-click="downloadAdviceExcel(form)"><i class="fa fa-download"></i> Download Excel</button>
+       <button type="button" class="btn bluebtn" ng-click="downloadAdvicePdf(form)"><i class="fa fa-download"></i> Download Pdf</button>
+      </div>
+    <div ng-show="showSuccess" class="success-message">Data Posted Successfully!</div>
+    <div ng-show="showDelete" class="delete-message">Delete Data Successfully!</div>
+
+
+  </form>
+
+
+  <div style="display: none;">
+    <div class="titles">Data List </div>   
+<div class="tablesec">
+  
+  <div class="text-center" ng-show="pageFlag"> 
+    
+  <div data-pagination="" data-num-pages="numOfPages()" data-current-page="curPage"
+  data-max-size="maxSize" data-boundary-links="true"> </div>
+  </div>
+  
+        <div class="tablesec table-responsive excelformate" >
+          <style>
+          
+            .printable-table {
+            width: 100%;
+        }
+        
+        .printable-table table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        
+        .printable-table th, .printable-table td {
+            border: 1px solid black;
+            padding: 5px; font-size: 12px;
+            text-align: left;
+        }
+        
+        .printable-table th {
+            background-color: #f2f2f2;
+        }
+        
+        @media print {
+          @page { size: A4 portrait; margin:40px !important;}
+            .printable-table th, .printable-table td {
+                border: 1px solid black !important;
+                padding: 3px !important;
+                text-align: left;
+            }
+
+            body{
+              padding:0!important; margin: 0!important;
+            }
+              
+        }
+
+        .borders td{ border-color: #fff!important;}
+        
+        </style>   
+
+ 
+<table class="table">
+  <tbody>
+      <tr>
+          <td colspan="6">
+              <h1 style="margin:5px 0;">
+                  <center>RANCHI UNIVERSITY, RANCHI</center>
+              </h1>
+          </td>
+      </tr>
+      <tr>
+          <td colspan="3" style="padding-top: 15px!important;">
+              <strong>Memo No. A/c</strong> 
+              <span>........................................................................</span>
+          </td> 
+          <td colspan="3" style="padding-top: 15px!important;">
+              <strong>Dated:</strong> 
+              <span>..................................................</span>
+          </td>
+      </tr>
+      <tr>
+          <td colspan="6">
+              <div style="text-align: center; padding: 10px;">
+                  <h1>PAY ORDER</h1>
+              </div>
+              <div style="padding-left: 30px; line-height: 1.5;">
+                  Pay Rs.<strong>{{monPensioerReportTotal | indianNumber}} (Rupees {{convertNumberToWords(monPensioerReportTotal)}}) </strong>
+                  <br>
+                  to R.U. Housing Fund A/c  ………………………………………
+                  <br>
+                  Debit to R.U. Pension and Gratuity Fund A/c No. ……………………………………………………
+                  <br>
+                  As Sanctioned by the Vice-Chancellor dated ………………………….
+              </div>
+          </td>
+      </tr>
+      <th colspan="4">
+
+        <h3 style="text-align: center;">Deduction of HRA from Monthly Pension to Pensioners/Family Pensioners for the month of {{getMonthName(monPensioerReportExcel[0].pension_month)}}-{{monPensioerReportExcel[0].pension_year}}</h3>
+      </th>
+      
+      <tr>
+          <th width="50">Sl. No.</th>
+          <th>DATA Sl. No.</th>
+          <th>Name of the Pensioner/Family Pensioner</th>
+          <th width="200">H.R.A.</th> 
+      </tr>
+      <tr ng-repeat="x in monPensioerReportExcel">
+          <td>{{$index+1}}.</td>
+          <td>{{x.pensioner_id}}</td>
+          <td>{{x.name_of_beneficiary}}</td>
+          <td> {{x.hra | indianNumber}}</td>
+      </tr>
+      <tr>
+          <th colspan="3" style="text-align: right;">Total Amount</th> 
+          <th>{{monPensioerReportTotal | indianNumber}}</th>
+      </tr> 
+     
+  </tbody>
+</table> 
+
+<table class="table">
+  <tr>
+    <td colspan="2" style="border-color:#fff!important;">
+      <div style="width:160px;">
+      <div style="text-align: center;font-weight: bold; padding-top:150px">Assistant <br>Pen. Cell. R.U., Ranchi </div>
+    </div>
+    </td>
+    <td style="border-color:#fff!important;">
+      <div style="width:160px;">
+      <div style="text-align: center; font-weight: bold; padding-top:150px">Finance Officer <br>Ranchi University, Ranchi</div>
+    </div>
+    </td>
+    <td style="border-color:#fff!important;"><div style="text-align: center; font-weight: bold; padding-top:150px">Registrar <br>Ranchi University, Ranchi </div> </td>
+  </tr>
+</table>
+
+
+        <!-- <div style="width:100%; display: flex; justify-content: space-between; padding-top:200px; text-align: center; ">
+          <div>Assistant <br>Pen. Cell. R.U., Ranchi </div>
+          <div>Finance Officer <br>Ranchi University, Ranchi</div>
+          <div>Registrar <br>Ranchi University, Ranchi </div> 
+        </div> -->
+        
+        </div>
+        <div class="text-center" ng-show="pageFlag"> 
+    
+          <div  data-pagination="" data-num-pages="numOfPages()" data-current-page="curPage"
+          data-max-size="maxSize" data-boundary-links="true"> </div>
+          </div>
+      </div>
+</div>
+<div class="loaderbg generateload" >
+  <div class="loading">
+    Generating
+  <span class="loading-dots">.</span>
+  <span class="loading-dots">.</span>
+  <span class="loading-dots">.</span>
+</div>
+</div>
+
+  <div class="popupbg"></div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

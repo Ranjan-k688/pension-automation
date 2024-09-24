@@ -1,0 +1,107 @@
+
+    <div ng-controller="generatePension">
+  <div class="titles">Generate Pension for Individual </div>  
+<form  name="generatePension"> 
+    <div class="formsec">    
+        <ul class="formshow list3">
+            <li>
+              <div class="form-group">
+                <label class="required">Select Year</label>
+                <input type="text" class="datepicker form-control" year-picker placeholder="Select Year" name="year" required ng-model="form1.year" maxlength="15" ng-disabled="flag"/>
+              
+              
+             <!-- <select class="form-control" ng-options="pensioner.pensionerId as pensioner.pensionerId for pensioner in allPensionersData | orderBy:'displayName'" name="year" required ng-model="form.pensionerId" ng-disabled="flag">
+                  <option value=""  selected>Select Year</option>
+                  </select> -->
+              </div>
+              <div class="error" ng-show="generatePension.year.$error.required && generatePension.year.$touched && !formSubmitted" style="color: red;">
+                This field is required.
+              </div>
+              <div class="error" ng-show="generatePension.pensionerId.$error.maxlength"  style="color: red;">
+                Only  15 characters are allowed.
+            </div>
+          </li>
+            <li>
+              <div class="form-group">
+                <label class="required">Select Month</label>
+                <!-- <input type="text" class="datepicker form-control" month-picker selected-year="form.year" placeholder="Select Month" name="month" required  ng-model="form.month" ng-disabled="flag" /> -->
+              
+               <select class="form-control" name="month" required ng-model="form1.month" ng-disabled="flag">
+                  <option value=""  selected>Select Month</option>
+                  <option value="1">January</option>
+                  <option value="2">February</option>
+                  <option value="3">March</option>
+                  <option value="4">April</option>
+                  <option value="5">May</option>
+                  <option value="6">June</option>
+                  <option value="7">July</option>
+                  <option value="8">August</option>
+                  <option value="9">September</option>
+                  <option value="10">October</option>
+                  <option value="11">November</option>
+                  <option value="12">December</option>
+
+                  </select>
+              
+              </div>
+              <div class="error" ng-show="generatePension.month.$error.required && generatePension.month.$touched && !formSubmitted" style="color: red;">
+                This field is required.
+              </div>
+          </li>  
+        </ul> 
+        <div> <button type="button" class="btn bluebtn" ng-click="generatePensionById(form1)">Submit</button></div>
+    </div>
+    <div ng-show="showSuccess" class="success-message">Data Posted Successfully!</div>
+    <div ng-show="showDelete" class="delete-message">Delete Data Successfully!</div>
+
+
+  </form>
+
+     <!-- data List -->
+        <div>
+          <div class="titles">Data List </div>   
+          <div class="tabletop fcs">
+                 <!-- <div><button class="btn bluebtn" data-toggle="modal" id="exportToExcel" data-backdrop="static" data-keyboard="false"><i class="fa fa-download"></i> Download</button></div> -->
+                 <!-- <div class="searchfield"><input class="form-control" type="text" value="" placeholder="Search" ng-model="searchId" value="" placeholder="Search By Id" /></div> -->
+               </div>
+               <div class="tablesec">
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                     <!-- <th width="100">Image</th> -->
+                      <th width="140">Pensioner Id</th>
+                      <th width="120">Name Of Employee</th>
+                      <th width="120">Name Of Pensioner</th>
+                      <th width="120">Pension Basic</th>
+                      <th width="120">Medical Allowance</th>
+                      <th width="120">Hra</th>
+                      <th width="120">DR</th>
+                      <th width="120">Gross Pension</th>
+                      <th width="120">Net Pension</th>
+                    </tr>
+                  </thead>
+        
+                  <tbody>
+                    <tr ng-repeat="x in pensionersDataById">
+                      <td>{{x.id}}</td>
+                      <td>{{x.name_of_employee}}</td>
+                      <td>{{x.name_of_pensioner}}</td>
+                      <td>{{x.basic}}</td>
+                      <td>{{x.ma}}</td>
+                      <td>{{x.hra}}</td>
+                      <td>{{x.dr}}</td>
+                      <td>{{x.gross_pension}}</td>
+                      <td>{{x.total_after_hra_deduction}}</td>
+                      <!-- <td> 
+                        <button class="btn editbtn" data-toggle="modal" data-placement="top" title="Edit" ng-click="editData(x)"><i class="fa fa-pencil"></i></button>
+                        <button class="btn viewbtn" data-toggle="modal" data-placement="top" title="View"><i class="fa fa-eye"></i></button>
+                        <button class="btn deletebtn" data-toggle="modal" data-placement="top" title="Delete"><i class="fa fa-trash" ng-click="DeleteData(x.pensionerId,x.dateFrom,$index)"></i></button> 
+                      </td> -->
+                    </tr>                   
+                  </tbody>
+                </table>
+              </div>
+        </div>
+<!-- data list End -->
+ 
+     </div>

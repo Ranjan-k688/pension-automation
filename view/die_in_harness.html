@@ -1,0 +1,558 @@
+
+<div  ng-controller="dieInHarness">
+  <div class="titles">Die In Harness Form</div>
+  <div style="color:red; text-align: center;" ng-show="flgmain"> <span>*</span> Field is Compulsory</div>  
+  <form name="dieInHarnessForm">
+    <div class="formsec">
+      <h4>Employee Info</h4>
+      <ul class="formshow list3">
+          <!-- <li>
+              <div class="form-group">
+                <label class="required">Pensioner ID</label>
+                <input type="text" class="form-control" placeholder="Employee Number" required="" ng-model="form.pensionerId"/>
+              </div>
+          </li> -->
+          <li>
+              <div class="form-group">
+                <label class="required">Name of Employee</label>
+                <div class="disflex">
+                <!-- <select class="form-control" name="prefix" ng-required="true"  style="width: 90px;" ng-model="form.prefix" ng-options="prefix.shortName as prefix.displayName for prefix in masterdata | filter: { type: 'prefix' } | orderBy:'displayName'" ng-change="fillAutomatic(form.prefix,'prefix')">
+                <option value="" disabled selected>Prefix</option>
+                </select> -->
+                <select class="form-control" name="prefix" ng-required="true"  style="width: 90px;" ng-model="form.prefix" ng-init="form.prefix='Late'" >
+                  <option value="Late" selected>Late</option>
+            
+                  </select>
+                <input type="text" class="form-control" m-name name="employeeName" required placeholder="Name" ng-model="form.employeeName" maxlength="60"/>
+                </div>
+              </div>
+              <div class="disflex">
+                <div class="error" ng-show="dieInHarnessForm.prefix.$error.required && dieInHarnessForm.prefix.$touched"  style="color: red; width: 90px;">
+                  Select Prefix
+                </div>
+                <div class="error" ng-show="dieInHarnessForm.employeeName.$error.required && dieInHarnessForm.employeeName.$touched"  style="color: red; width: calc(100% - 90px);">
+                  Enter Employee Name
+                </div>
+              </div>
+              
+          </li>
+          <li>
+            <div class="form-group">
+              <label class="required">Employee Type</label>
+              <select class="form-control" ng-model="form.pensionerTypeCode" required name="pensionerTypeCode"  title="Select Employee Type" ng-options="pensionerType.pensionerTypeCode as pensionerType.dscr for pensionerType in pensionerType | orderBy:'pensionerTypeCode'" ng-change="fetchgrade(form.pensionerTypeCode)">
+                <option value="" disabled selected>Select Employee Type</option>
+            </select>
+            </div> 
+            <div class="error" ng-show="dieInHarnessForm.pensionerTypeCode.$error.required && dieInHarnessForm.pensionerTypeCode.$touched"  style="color: red;">
+              Select Employee Type
+            </div>
+        </li>
+        <li>
+          <div class="form-group">
+            <label class="required">Pay Commission Code</label>
+            <select class="form-control" ng-model="form.payCommissionCode" required name="payCommissionCode"  title="Select Pay Commission Code" ng-options="x.payCommissionCode as x.dscr for x in payCommisions | orderBy:'dscr'">
+              <option value="" disabled selected>Select Pay Commission Code</option>
+              </select>
+          </div>
+          <div class="error" ng-show="dieInHarnessForm.payCommissionCode.$error.required && dieInHarnessForm.payCommissionCode.$touched"  style="color: red;">
+            Select Pay Commission Code
+          </div> 
+        </li>
+          <li>
+            <div class="form-group">
+              <label class="required">Gender </label>
+              <select class="form-control" ng-model="form.sex" required name="sex" title="Select Gender" ng-options="sex.shortName as sex.displayName for sex in masterdata | filter: { type: 'sex' } | orderBy:'displayName'">
+              <option value="" disabled selected>Select Gender</option>
+              </select>
+            </div>
+            <div class="error" ng-show="dieInHarnessForm.sex.$error.required && dieInHarnessForm.sex.$touched"  style="color: red;">
+              Select Gender
+            </div>
+          </li>
+          <li>
+            <div class="form-group">
+              <label class="required">Date of Birth</label>
+              <input type="text" class="datepicker form-control" autocomplete="off" required name="dateOfBirth" placeholder="DD-MM-YYYY" new-datepicker-18 ng-model="form.dateOfBirth"/>
+            </div> 
+            <div class="error" ng-show="dieInHarnessForm.dateOfBirth.$error.required && dieInHarnessForm.dateOfBirth.$touched"  style="color: red;">
+              Enter Date of Birth
+            </div>
+            <div class="error" ng-show="dobflg"  style="color: red;">
+              Your Date of Birth is not eligible for pension
+            </div>
+        </li>
+          <!-- <li>
+              <div class="form-group">
+                <label>RU Sl No.</label>
+                <input type="text" class="form-control" placeholder="Ru slno" required="" ng-model="form.ruSlno"/>
+              </div>
+          </li> -->
+          <li>
+            <div class="form-group">
+              <label>Father's Name / Husband's Name</label>
+              <input type="text" m-name class="form-control" maxlength="60" placeholder="Father's Name / Husband's Name" ng-model="form.fatherName" name="fatherName"/>
+             </div>
+        </li>
+        <li>
+          <div class="form-group">
+            <label>Religion</label>
+            <select class="form-control" ng-model="form.religionName" ng-options="x.religionName as x.religionName for x in religion">
+              <option value="" disabled selected>Select Religion</option>
+              </select>
+           </div>
+      </li>
+      <!-- <li>
+        <div class="form-group">
+          <label class="required">Pensioner Relation</label>
+            <select class="form-control" ng-model="form.pensionerRelation" name="pensionerRelation" required title="Select Pensioner Relation" ng-options="x.pensionerRelation as x.pensionerRelation for x in relationship" ng-change="fillAutomatic(form.pensionerRelation,'relation')"> 
+            <option value="" disabled selected>Select Pensioner Relation</option>
+            </select>
+        </div>
+        <div class="error" ng-show="dieInHarnessForm.pensionerRelation.$error.required  && dieInHarnessForm.pensionerRelation.$touched"  style="color: red;">
+          Select Pensioner Relation
+        </div>  
+      </li> -->
+        <!-- <li>
+          <div class="form-group">
+            <label class="required">Pensioner Name</label>
+            <input type="text" class="form-control" m-name maxlength="60" placeholder="Pensioner Name" name="pensionerName" required ng-model="form.pensionerName"/>
+          </div>
+          <div class="error" ng-show="dieInHarnessForm.pensionerName.$error.required && dieInHarnessForm.pensionerName.$touched"  style="color: red;">
+            Enter Pensioner Name
+          </div> 
+        </li> -->
+      
+        <li>
+          <div class="form-group">
+            <label class="required">Rate Of Pension(%)</label>
+            <input type="text" class="form-control" placeholder="Rate Of Pension" required name="rateOfPension" ng-model="form.rateOfPension" m-num-only ng-pattern="/^(100|[0-9]{1,2})$/" maxlength="3"/>
+          </div> 
+          <div class="error" ng-show="dieInHarnessForm.rateOfPension.$error.required && dieInHarnessForm.rateOfPension.$touched"  style="color: red;">
+            Enter Rate Of Pension
+          </div> 
+          <div class="error" ng-show="dieInHarnessForm.rateOfPension.$error.pattern" style="color: red;">
+            The value must not exceed 100%.
+          </div>
+        </li>
+         
+          </ul>
+      </div>
+
+      <div class="formsec" style="background: #f9f0e1;">
+        <h4>Address</h4>
+        <ul class="formshow list3">
+        <li>
+          <div class="form-group">
+            <label class="required">Pin</label>
+            <input type="text" class="form-control" placeholder="Pin" maxlength="6" name="pin" required ng-model="form.pin" ng-blur="address(form.pin)" m-num-only/>
+          </div> 
+          <div class="error" ng-show="pinflag"  style="color: red;">
+            Enter correct pin
+          </div> 
+      </li>
+      <li>
+        <div class="form-group">
+          <label class="required">Address</label>
+          <input type="text" class="form-control" placeholder="Address" required ng-model="form.addr1"/>
+        </div> 
+    </li>
+    <li>
+        <div class="form-group">
+          <label class="required">Post office</label>
+        <select class="form-control" ng-model="form.addr2"  title="Select Post Office">
+          <option value="" disabled selected>Post Office</option>
+          <option ng-repeat="post in postoffice" value="{{post.Name}}">{{post.Name}}</option>
+        </select>
+        </div> 
+    </li>
+        <li>
+          <div class="form-group">
+            <label class="required">City</label>
+            <input type="text" class="form-control" required  m-name placeholder="City" ng-required="true" ng-model="form.city"/>
+          </div> 
+      </li>
+      <li>
+        <div class="form-group">
+          <label class="required">State</label>
+          <input type="text" class="form-control" placeholder="State" m-name required ng-model="form.state"/>
+        </div> 
+    </li>
+
+            </ul>
+         </div>
+
+
+
+
+       <div class="formsec" style="background: #f9f0e1;">
+        <h4>Affiliation Info</h4>
+        <ul class="formshow list3">
+          <!-- <li>
+            <div class="form-group">
+              <label>University Code</label>
+              <input type="text" class="form-control" placeholder="University Code" required="" ng-model="form.universityCode"/>
+            </div> 
+        </li> -->
+        <li>
+          <div class="form-group">
+            <label class="required">College/University</label>
+              <select class="form-control dropdd" data-live-search="true" ng-model="form.collegeCode" required name="collegeCode" title="Select College/University" ng-options="x.collegeShortName as x.dscr for x in colleges" ng-change="fetchdepartment(form.collegeCode);">
+              <option value="" readonly selected>Select College</option>
+          </select>
+          </div>
+          <div class="error" ng-show="pensionerForm.collegeCode.$error.required && pensionerForm.collegeCode.$touched"  style="color: red;">
+            Select College/University
+          </div> 
+      </li>
+          <li>
+            <div class="form-group">
+              <label class="required">Department</label>
+              <select class="form-control dropdd1" data-live-search="true" ng-model="form.departmentCode" required name="departmentCode" title="Select Department" ng-options="x.deptShortName + '!!' + x.departmentIds  as x.dscr for x in departmentlist">
+                <option value="" readonly selected>Select Department</option>
+            </select>
+            </div> 
+            <div class="error" ng-show="pensionerForm.departmentCode.$error.required && pensionerForm.departmentCode.$touched"  style="color: red;">
+              Select Department
+            </div>
+        </li>
+        <li>
+          <div class="form-group">
+            <label class="required">Level</label>
+            <select class="form-control dropdd2" data-live-search="true" ng-model="form.gradeCode" required name="gradeCode" title="Select Level" ng-options="grade.gradeCode as grade.dscr+' - '+getFilteredDesignation(grade.gradeCode) for grade in gradelist  | orderBy:'gradeCode'" ng-change="fetchdesigation(form.gradeCode);">
+              <option value="" readonly selected>Select Level</option>
+          </select>
+          </div> 
+          <div class="error" ng-show="pensionerForm.gradeCode.$error.required && pensionerForm.gradeCode.$touched"  style="color: red;">
+            Select Level
+          </div>
+      </li>
+  
+          <li>
+            <div class="form-group">
+              <label class="required">Designation</label>
+              <select class="form-control dropdd3" data-live-search="true"  ng-model="form.desigShortName" required name="desigShortName" title="Select Designation" ng-options="designation.desigShortName + '!!' + designation.designationId as designation.dscr for designation in pensionerDesignationList">
+                <option value="" readonly selected>Select Designation</option>
+            </select>
+            </div> 
+            <div class="error" ng-show="pensionerForm.desigShortName.$error.required && pensionerForm.desigShortName.$touched"  style="color: red;">
+              Select Designation
+            </div>
+        </li>
+        <li ng-if="form.pensionerTypeCode=='PT1'">
+          <div class="form-group">
+            <label>Subject</label>
+            <select class="form-control dropddsub" data-live-search="true" ng-model="form.subjectCode" required title="Select Subject" ng-options="subjectCode.subjectCode as subjectCode.dscr for subjectCode in subjects">
+              <option  value="" readonly selected>Select Subject</option>
+          </select>
+          </div> 
+        </li>
+      <li>
+        <div class="form-group">
+          <label>Pensioner Univ Id</label>
+          <input type="text" class="form-control" maxlength="20"  placeholder="Pensioner Univ Id" required ng-model="form.pensionerUnivId"/>
+        </div> 
+      </li>
+            </ul>
+         </div>
+
+
+         
+       <div class="formsec" style="background: #eae7e7">
+        <h4>Appointment Info</h4>
+        <ul class="formshow list3">
+          <li>
+            <div class="form-group">
+              <label class="required">Date of Last Appointment</label>
+              <input type="text" class="datepicker form-control" autocomplete="off"  placeholder="DD-MM-YYYY" datepicker required name="dateOfLastAppointment" ng-model="form.dateOfLastAppointment" ng-change="dateCompare(form.dateOfBirth,form.dateOfLastAppointment,'LA')"/>
+            </div> 
+            <div class="error" ng-show="dieInHarnessForm.dateOfLastAppointment.$error.required && dieInHarnessForm.dateOfLastAppointment.$touched"  style="color: red;">
+              Select Date of Last Appointment
+            </div>
+            <div class="error" ng-show="la"  style="color: red;">
+              Date of Last Appointment is greater than DOB 
+            </div>
+          </li>
+          <li>
+            <div class="form-group">
+              <label>Date of Regularisation</label>
+              <input type="text" class="datepicker form-control" autocomplete="off" placeholder="DD-MM-YYYY" datepicker ng-model="form.dateOfRegularisation" ng-change="form.dateOfRegularisation? dateCompare(form.dateOfLastAppointment, form.dateOfRegularisation, 'Rgl') : dateCompare(form.dateOfLastAppointment, form.dateOfRegularisation, 'Rgl1') "
+              />
+            </div> 
+            <div class="error" ng-show="rgl"  style="color: red;">
+              Date of Regularisation is greater than Date of Last Appointment
+            </div>
+          </li>
+
+          <li>
+            <div class="form-group">
+              <label class="required">Date of Superannuation</label>
+              <input type="text" class="datepicker form-control" autocomplete="off" placeholder="DD-MM-YYYY" datepicker required name="dateOfSeparation" ng-model="form.dateOfSeparation"  ng-change="dateCompare(form.dateOfRegularisation ? form.dateOfRegularisation : form.dateOfLastAppointment, form.dateOfSeparation, form.dateOfRegularisation ? 'Spr' : 'Spr1')"
+              />
+            </div> 
+            <div class="error" ng-show="dieInHarnessForm.dateOfSeparation.$error.required && dieInHarnessForm.dateOfSeparation.$touched"  style="color: red;">
+              Select Date of Separation
+            </div>
+            <div class="error" ng-show="spr"  style="color: red;">
+              Date of Separation is greater than Date of Regularisation
+            </div>
+            <div class="error" ng-show="spr1"  style="color: red;">
+              Date of Separation is greater than Date of Last Appointment
+            </div>
+          </li>
+
+            </ul>
+         </div>
+
+
+
+
+         <div class="formsec">
+          <h4>Personal Info</h4>
+          <ul class="formshow list3">
+
+            <li>
+              <div class="form-group">
+                <label class="required">PPO No.</label>
+                <input type="text" class="form-control"  minlength="12" maxlength="12" placeholder="PPO No" required name="ppoNo" ng-model="form.ppoNo" m-num-only ng-blur="checkDuplicate('ppoNo',form.ppoNo)" no-special-characters/>
+              </div> 
+              <div class="error" ng-show="dieInHarnessForm.ppoNo.$error.minlength"  style="color: red;">
+                Enter correct PPO No.
+              </div>
+              <div class="error" ng-show="pponodup"  style="color: red;">
+                PPO No. already exist
+              </div>
+              <!-- <div class="error" ng-show="dieInHarnessForm.ppoNo.$error.required && dieInHarnessForm.ppoNo.$touched"  style="color: red;">
+                Enter PPO No.
+              </div> -->
+            </li>
+            <li>
+              <div class="form-group">
+                <label class="required">Aadhaar No.</label>
+                <input type="text" class="form-control" maxlength="12" maxlength="12" placeholder="Aadhaar No" required name="aadhaar" ng-model="form.aadhaar" m-num-only ng-blur="chkAadhar(); " /><!-- checkDuplicate('aadhaar',form.aadhaar)  aadhar-validator-->
+              </div> 
+              <div class="error" ng-show="aadharflag"  style="color: red;">
+                Enter correct Aadhaar No.
+              </div>
+              <div class="error" ng-show="aadhaardup"  style="color: red;">
+                Aadhaar No. already exist
+              </div>
+              <!-- <div class="error" ng-show="dieInHarnessForm.aadhaar.$error.minlength "  style="color: red;">
+                Enter correct Aadhaar No.
+              </div> -->
+              <!-- <div class="error" ng-show="(dieInHarnessForm.aadhaar.$error.required && dieInHarnessForm.aadhaar.$touched) || (form.aadhaar === undefined && dieInHarnessForm.aadhaar.$touched)"  style="color: red;">
+                Enter Aadhaar No.
+              </div> -->
+            </li>
+            <li>
+              <div class="form-group">
+                <label class="required">PAN Record</label>
+                <select class="form-control" ng-model="form.panRecord" required data-live-search="true"  title="Select" ng-options="panRecord.shortName as panRecord.displayName for panRecord in masterdata | filter: { type: 'pan_record' } | orderBy:'displayName'" ng-change="fillAutomatic(form.panRecord,'pan')">
+                  <option value="" disabled selected >Select</option>
+              </select>
+              </div> 
+            </li>
+            <li ng-if="form.panRecord==='Y'">
+              <div class="form-group">
+                <label class="required">PAN No.</label>
+                <input type="text" class="form-control" m-capitalize maxlength="10" minlength="10"  pan-number placeholder="like:- ABCTY1234D" required name="pan" ng-model="form.pan" ng-blur="checkDuplicate('pan',form.pan)"/>
+              </div> 
+              <div class="error" ng-show="dieInHarnessForm.pan.$error.panNumber" style="color: red;">
+                Please enter a valid PAN number (10 characters).
+              </div>
+              <div class="error" ng-show="dieInHarnessForm.pan.$error.required && dieInHarnessForm.pan.$touched && form.panRecord=='Y' || (form.panRecord===undefined && dieInHarnessForm.panRecord.$touched)"  style="color: red;">
+                Enter PAN No.
+              </div>
+              <div class="error" ng-show="pandup"  style="color: red;">
+                PAN  No. already exist
+              </div>
+            </li>
+
+            <!-- <li>
+              <div class="form-group">
+                <label>Mobile No.</label>
+                <input type="text" class="form-control" maxlength="10" minlength="10" ng-pattern="/^[6-9]\d{9}$/" placeholder="Mobile No" required name="mobileNo" ng-model="form.mobileNo" m-num-only ng-blur="checkDuplicate('mobileNo',form.mobileNo)"/>
+              </div> 
+              <div class="error" ng-show="dieInHarnessForm.mobileNo.$error.pattern || dieInHarnessForm.mobileNo.$error.minlength"  style="color: red;">
+                Mobile number should start with 6 to 9 and contains 10 digits mobile no.
+              </div>
+              <div class="error" ng-show="dieInHarnessForm.mobileNo.$error.minlength"  style="color: red;">
+                Enter 10 digits mobile no.
+              </div>
+              <div class="error" ng-show="(dieInHarnessForm.mobileNo.$error.required && dieInHarnessForm.mobileNo.$touched) || (form.mobileNo===undefined && dieInHarnessForm.mobileNo.$touched)"  style="color: red;">
+                Enter Mobile No.
+              </div>
+              <div class="error" ng-show="mobiledup"  style="color: red;">
+                Mobile No. already exist
+              </div>
+            </li> -->
+             
+              </ul>
+           </div>
+           <!-- <div class="formsec" style="background: #ffe5ed;">
+            <h4>Bank Account Info</h4>
+            <ul class="formshow list3">
+              <li>
+                <div class="form-group">
+                  <label class="required">Name of Bank</label>
+                  <select class="form-control" ng-model="bank.bankCode" name="bankCode" required ng-options="bank.bankCode as bank.bankName for bank in banklist">
+                    <option value="" disabled selected >Select Bank</option>
+                </select>
+                </div> 
+                <div class="error" ng-show="dieInHarnessForm.bankCode.$error.required && dieInHarnessForm.bankCode.$touched"  style="color: red;">
+                  Select Bank
+                </div>
+              </li>
+              <li>
+                <div class="form-group">
+                  <label class="required">Date Effective from</label>
+                  <input type="text" class="datepicker form-control" autocomplete="off" placeholder="DD-MM-YYYY" datepicker required name="accountEffectiveFrom" ng-model="bank.accountEffectiveFrom" ng-change="dateCompare(form.dateOfBirth,bank.accountEffectiveFrom,'accountEffectiveFrom')"/>
+                </div> 
+                <div class="error" ng-show="dieInHarnessForm.accountEffectiveFrom.$error.required && dieInHarnessForm.accountEffectiveFrom.$touched"  style="color: red;">
+                  Select Date Effective from
+                </div>
+                <div class="error" ng-show="accEfFrom"  style="color: red;">
+                  Date Effective from is greater than DOB
+                </div>
+              </li>
+              <li>
+                <div class="form-group">
+                  <label class="required">Account No.</label>
+                  <input type="text" class="form-control" m-num-only maxlength="20" placeholder="Account No" required name="accountNo" ng-model="bank.accountNo"/>
+                </div> 
+                <div class="error" ng-show="dieInHarnessForm.accountNo.$error.required && dieInHarnessForm.accountNo.$touched"  style="color: red;">
+                  Enter Account No.
+                </div>
+              </li>
+              <li>
+                <div class="form-group">
+                  <label class="required">IFSC Code</label>
+                  <input type="text" m-capitalize class="form-control" placeholder="IFSC Code" ng-pattern="/^[A-Z]{4}\d{7}$/" minlength="11" maxlength="11" required name="ifscCode" ng-model="bank.ifscCode" no-special-characters/>
+                </div> 
+                <div class="error" ng-show="dieInHarnessForm.ifscCode.$error.required && dieInHarnessForm.ifscCode.$touched"  style="color: red;">
+                  Enter IFSC Code
+                </div>
+                <div class="error" ng-show="dieInHarnessForm.ifscCode.$error.pattern"  style="color: red;">
+                  Enter Correct IFSC Code
+                </div>
+              </li>
+
+              <li>
+                <div class="form-group">
+                  <label>Branch</label>
+                  <input type="text" class="form-control" m-name placeholder="Branch" maxlength="30" required="" ng-model="bank.branchName"/>
+                </div> 
+              </li>
+              <li>
+                <div class="form-group">
+                  <label class="required">City</label>
+                  <input type="text" class="form-control" m-name maxlength="30" placeholder="Branch City" required name="branchCity" ng-model="bank.branchCity"/>
+                </div> 
+                <div class="error" ng-show="dieInHarnessForm.branchCity.$error.required && dieInHarnessForm.branchCity.$touched"  style="color: red;">
+                  Enter Branch City
+                </div>
+              </li>
+              <li>
+                <div class="form-group">
+                  <label class="required">State</label>
+                  <input type="text" class="form-control" m-name maxlength="20" placeholder="Branch State" required name="state" ng-model="bank.state"/>
+                </div> 
+                <div class="error" ng-show="dieInHarnessForm.state.$error.required && dieInHarnessForm.state.$touched"  style="color: red;">
+                  Enter Branch State
+                </div>
+              </li>
+               
+                </ul>
+             </div> -->
+
+<!-- 
+             <div class="formsec" style="background: #dadbf7;">
+            <h4>Pay Details</h4>
+            <ul class="formshow list3">
+         
+          <li>
+            <div class="form-group">
+              <label class="required">Date From</label>
+              <input type="text" class="datepicker form-control" autocomplete="off" placeholder="DD-MM-YYYY" datepicker required name="dateFrom" ng-model="paydetail.dateFrom" ng-change="dateCompare(form.dateOfBirth,paydetail.dateFrom,'dateFrom')"/>
+            </div>
+            <div class="error" ng-show="dieInHarnessForm.dateFrom.$error.required && dieInHarnessForm.dateFrom.$touched"  style="color: red;">
+              Enter Date From
+            </div> 
+            <div class="error" ng-show="dateFromflg"  style="color: red;">
+              Date From is greater than DOB
+            </div>
+          </li>
+
+          <li>
+            <div class="form-group">
+              <label class="required">Basic pension</label>
+              <input type="text" class="form-control" placeholder="Basic pension" m-num-only maxlength="10" required name="pensionBasic" ng-model="paydetail.pensionBasic"/>
+            </div> 
+            <div class="error" ng-show="dieInHarnessForm.pensionBasic.$error.required && dieInHarnessForm.pensionBasic.$touched"  style="color: red;">
+              Enter Basic pension
+            </div> 
+          </li>
+          <li>
+            <div class="form-group">
+              <label class="required">Medical Allowance</label>
+              <input type="text" class="form-control" placeholder="Medical Allowance" m-num-only maxlength="7" required name="medicalAllowance" ng-model="paydetail.medicalAllowance"/>
+            </div> 
+            <div class="error" ng-show="dieInHarnessForm.medicalAllowance.$error.required && dieInHarnessForm.medicalAllowance.$touched"  style="color: red;">
+              Enter Medical Allowance
+            </div> 
+          </li>
+          <li>
+            <div class="form-group">
+              <label class="required">HRA</label>
+              <input type="text" class="form-control" placeholder="HRA" maxlength="7" m-num-only required name="hra" ng-model="paydetail.hra"/>
+            </div> 
+            <div class="error" ng-show="dieInHarnessForm.hra.$error.required && dieInHarnessForm.hra.$touched"  style="color: red;">
+              Enter HRA
+            </div> 
+          </li>
+      </ul> 
+  </div> -->
+
+          <div class="formsec" style="background: #dadbf7;">
+            <h4>Other Info</h4>
+            <ul class="formshow list3">
+              <li>
+                <div class="form-group">
+                  <label class="required">Pensioner Status Code</label>
+                  <select class="form-control" name="pensionerStatusCode" disabled required ng-model="form.pensionerStatusCode" ng-options="x.pensionerStatusCode as x.dscr for x in pensionerStatus" >
+                    <option value="" disabled selected >Select Pensioner Status Code</option>
+                </select>
+                </div> 
+                <div class="error" ng-show="dieInHarnessForm.pensionerStatusCode.$error.required && dieInHarnessForm.pensionerStatusCode.$touched"  style="color: red;">
+                  Select Pensioner Status Code
+                </div> 
+              </li>
+              <li>
+                <div class="form-group">
+                  <label class="required">Date Of death</label>
+                  <input type="text" class="datepicker form-control" autocomplete="off" placeholder="DD-MM-YYYY" datepicker required name="dateOfDeath" ng-model="form.dateOfDeath" ng-change="dateCompare(form.dateOfBirth,form.dateOfDeath,'dateOfDeath')"/>
+                </div> 
+                <div class="error" ng-show="dieInHarnessForm.dateOfDeath.$error.required && dieInHarnessForm.dateOfDeath.$touched && form.pensionerStatusCode==0"  style="color: red;">
+                  Select Death of death
+                </div> 
+                <div class="error" ng-show="dateOfDeathflg"  style="color: red;">
+                  Date From is greater than DOB.
+                </div>
+              </li>
+
+
+      </ul> 
+  </div>
+  <div class="text-center"> <button type="button" class="btn bluebtn" ng-disabled="dieInHarnessForm.$invalid" ng-click="save()">Submit</button></div>
+</form>
+   </div>
+
+   
+   <div class="loaderbg">
+    <div class="loading">
+      Loading
+    <span class="loading-dots">.</span>
+    <span class="loading-dots">.</span>
+    <span class="loading-dots">.</span>
+  </div>
+  </div>
+ 

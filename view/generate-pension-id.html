@@ -1,0 +1,169 @@
+
+    <div ng-controller="generatePension">
+  <div class="titles">Generate Pension for Individual </div>  
+<form  name="generatePension"> 
+    <div class="formsec">    
+        <ul class="formshow list3">
+          
+            <li>
+              <div class="form-group">
+                <label class="required">Select Year</label>
+                <input type="text" class="datepicker form-control" year-picker autocomplete="off" placeholder="Select Year" name="year" required ng-model="form.year" maxlength="15" ng-disabled="flag" ng-change="flushMonth()"/>
+              
+              
+                <!-- <select class="form-control" ng-options="pensioner as pensioner for pensioner in allPensionersData | orderBy:'displayName'" name="year" required ng-model="form.pensionerId" ng-disabled="flag">
+                  <option value=""  selected>Select Year</option>
+                  </select> -->
+              </div>
+              <div class="error" ng-show="generatePension.year.$error.required && generatePension.year.$touched && !formSubmitted" style="color: red;">
+                This field is required.
+              </div>
+              <div class="error" ng-show="generatePension.pensionerId.$error.maxlength"  style="color: red;">
+                Only  15 characters are allowed.
+            </div>
+          </li>
+            <li>
+              <div class="form-group">
+                <label class="required">Select Month</label>
+                <!-- <input type="text" class="datepicker form-control" month-picker selected-year="form.year" placeholder="Select Month" name="month" required  ng-model="form.month" ng-disabled="flag" /> -->
+              
+                <select class="form-control" name="month" required ng-model="form.month" ng-disabled="flag" ng-change="getAllPensionerIDs(form)">
+                  <option value="" selected>Select Month</option>
+                  <option ng-repeat="month in availableMonths" value="{{month.value}}">{{month.name}}</option>
+                </select>
+              
+              </div>
+              <div class="error" ng-show="generatePension.month.$error.required && generatePension.month.$touched && !formSubmitted" style="color: red;">
+                This field is required.
+              </div>
+          </li>  
+          
+          <li>
+            <div class="form-group">
+              <label class="required">Pensioner Id </label>
+                <select class="form-control dropdd" data-live-search="true"  ng-options="pensioner.pensioner_id as pensioner.pensioner_id + ' - ' + pensioner.pensioner_name for pensioner in allPensionersIDs | orderBy:'pensionerName'" name="pensionerId" required ng-model="form.pensionerId" ng-change="filldata(form.pensionerId)">
+                  <option value="" selected>Select Pensioner Id</option>
+              </select>
+            </div>
+            <div class="error" ng-show="generatePension.pensionerId.$error.required && paydetail.pensionerId.$touched && !formSubmitted" style="color: red;">
+              This field is required.
+            </div>
+            <div class="error" ng-show="generatePension.pensionerId.$error.maxlength"  style="color: red;">
+              Only  15 characters are allowed.
+          </div>
+        </li>
+
+        <li ng-if="form.pensionerId">
+          <div class="form-group">
+            <label class="required">Name Of Employee</label>
+            <input type="text" class="datepicker form-control" placeholder="Name" name="month" ng-model="form12.employee_name" disabled/>
+          </div>
+      </li>
+        <li ng-if="form.pensionerId">
+          <div class="form-group">
+            <label>College</label>
+            <input type="text" class="datepicker form-control" placeholder="Name" name="month" ng-model="form12.college" disabled/>
+          </div>
+      </li>
+
+      <li ng-if="form.pensionerId">
+        <div class="form-group">
+          <label>Designation</label>
+          <input type="text" class="datepicker form-control" placeholder="Name" name="month" ng-model="form12.post" disabled/>
+        </div>
+    </li>
+    <li ng-if="form.pensionerId">
+      <div class="form-group">
+        <label>Name Of Pensioner</label>
+        <input type="text" class="datepicker form-control" placeholder="Name" name="month" ng-model="form12.pensioner_name" disabled/>
+      </div>
+     </li>
+
+        <li ng-if="form.pensionerId">
+          <div class="form-group">
+            <label>Pan</label>
+            <input type="text" class="datepicker form-control" placeholder="Name" name="month" ng-model="form12.pan_no" disabled/>
+          </div>
+      </li>
+      <li ng-if="form.pensionerId">
+        <div class="form-group">
+          <label>AADHAR No.</label>
+          <input type="text" class="datepicker form-control" placeholder="Name" name="month" ng-model="form12.adhar_no" disabled/>
+        </div>
+      </li>
+        </ul> 
+        <div class="text-center"> <button type="button" class="btn bluebtn" ng-click="generatePensionById(form)">Submit</button></div>
+    </div>
+    <div ng-show="showSuccess" class="success-message">Data Posted Successfully!</div>
+    <div ng-show="showDelete" class="delete-message">Delete Data Successfully!</div>
+
+
+  </form>
+
+     <!-- data List -->
+        <div>
+          <div class="titles">Data List </div>   
+          <div class="tabletop fcs">
+                 <!-- <div><button class="btn bluebtn" data-toggle="modal" id="exportToExcel" data-backdrop="static" data-keyboard="false"><i class="fa fa-download"></i> Download</button></div> -->
+                 <!-- <div class="searchfield"><input class="form-control" type="text" value="" placeholder="Search" ng-model="searchId" value="" placeholder="Search By Id" /></div> -->
+               </div>
+               <div class="tablesec">
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                     <!-- <th width="100">Image</th> -->
+                     <th width="120">Pension ID</th>
+                     <th width="200">Name of Employee</th>
+                     <th class="text-center">Basic</th>
+                     <th class="text-center">Age % Increase</th>
+                     <th class="text-center">Revised Basic</th>
+                     <th class="text-center">Dearness Relief</th>
+                     <th class="text-center">Medical Allowance</th>
+                     <th class="text-center">Gross Pension</th>
+                     <th class="text-center">HRA</th>
+                     <th class="text-center">TDS</th>
+                     <th class="text-center">Rate of Pension</th>
+                     <th class="text-center">Net Pension</th>
+                     <th class="text-center">Month</th>
+                     <th class="text-center">Year</th>
+                    </tr>
+                  </thead>
+        
+                  <tbody>
+                    <tr ng-repeat="x in pensionersDataById">
+                      <td>{{x.id}}</td>
+                      <td>{{x.sirName}} {{x.name_of_employee}}</td>
+                      <td class="text-center">{{x.basic}}</td>
+                      <td class="text-center">{{x.age_perc_increase}}%</td>
+                      <td class="text-center">{{x.revised_basic}}</td>
+                      <td class="text-center">{{x.dr}}</td>
+                      <td class="text-center">{{x.ma}}</td>
+                      <td class="text-center">{{x.gross_pension}}</td>
+                      <td class="text-center">{{x.hra}}</td>
+                      <td class="text-center">{{x.tds}}</td>
+                      <td class="text-center">{{x.rate_of_pension - x.stopped_percentage}}%</td>
+                      <td class="text-center">{{x.net_pension}}</td>
+                      <td class="text-center">{{getMonthName(x.pension_month)}}</td>
+                      <td class="text-center">{{x.pension_year}}</td>
+                      <!-- <td> 
+                        <button class="btn editbtn" data-toggle="modal" data-placement="top" title="Edit" ng-click="editData(x)"><i class="fa fa-pencil"></i></button>
+                        <button class="btn viewbtn" data-toggle="modal" data-placement="top" title="View"><i class="fa fa-eye"></i></button>
+                        <button class="btn deletebtn" data-toggle="modal" data-placement="top" title="Delete"><i class="fa fa-trash" ng-click="DeleteData(x.pensionerId,x.dateFrom,$index)"></i></button> 
+                      </td> -->
+                    </tr>                   
+                  </tbody>
+                </table>
+              </div>
+        </div>
+<!-- data list End -->
+
+<div class="loaderbg fetchIdloader">
+  <div class="loading">
+    Loading
+  <span class="loading-dots">.</span>
+  <span class="loading-dots">.</span>
+  <span class="loading-dots">.</span>
+</div>
+</div>
+ 
+     </div>

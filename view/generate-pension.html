@@ -1,0 +1,149 @@
+
+    <div ng-controller="generatePension">
+  <div class="titles">Generate Pension Form</div>  
+<form  name="generatePension"> 
+    <div class="formsec">    
+        <ul class="formshow list3">
+            <li>
+                <div class="form-group">
+                  <label class="required">Select Year</label>
+                  <input type="text" class="datepicker form-control" autocomplete="off" year-picker placeholder="Select Year" name="year" required ng-model="form.year" maxlength="15" ng-disabled="flag"/>
+                
+                
+                  <!-- <select class="form-control" ng-options="pensioner.pensionerId as pensioner.pensionerId for pensioner in allPensionersData | orderBy:'displayName'" name="year" required ng-model="form.pensionerId" ng-disabled="flag">
+                    <option value=""  selected>Select Year</option>
+                    </select> -->
+                </div>
+                <div class="error" ng-show="generatePension.year.$error.required && generatePension.year.$touched && !formSubmitted" style="color: red;">
+                  This field is required.
+                </div>
+                <div class="error" ng-show="generatePension.pensionerId.$error.maxlength"  style="color: red;">
+                  Only  15 characters are allowed.
+              </div>
+            </li>
+            <li>
+                <div class="form-group">
+                  <label class="required">Select Month</label>
+                  <!-- <input type="text" class="datepicker form-control" month-picker selected-year="form.year" placeholder="Select Month" name="month" required  ng-model="form.month" ng-disabled="flag" /> -->
+                
+                  <select class="form-control" name="month" required ng-model="form.month" ng-disabled="flag">
+                    <option value="" selected>Select Month</option>
+                    <option ng-repeat="month in availableMonths" value="{{month.value}}">{{month.name}}</option>
+                  </select>
+                
+                </div>
+                <div class="error" ng-show="generatePension.month.$error.required && generatePension.month.$touched && !formSubmitted" style="color: red;">
+                  This field is required.
+                </div>
+            </li>    
+            <!-- <li>
+              <div class="form-group">
+                <label class="">Date To</label>
+                <input type="text" class="datepicker form-control"  datepicker placeholder="dateTo" ng-model="form.dateTo" />
+              </div>
+          </li>    -->
+          <!-- <li>
+            <div class="form-group">
+              <label class="required">Pension Basic </label>
+              <input type="text" class="form-control" name="pensionBasic" required placeholder="pensionBasic" ng-model="form.pensionBasic" ng-pattern="/^[0-9]*$/"  />
+            </div>
+            <div class="error" ng-show="paydetail.pensionBasic.$error.required && paydetail.pensionBasic.$touched && !formSubmitted" style="color: red;">
+              This field is required.
+            </div>
+            <div class="error" ng-show="paydetail.pensionBasic.$error.pattern && paydetail.pensionBasic.$touched"  style="color: red;">
+              Only numeric  characters are allowed.
+          </div>
+        </li>   -->
+        <!-- <li>
+          <div class="form-group">
+            <label class="">Medical Allowance</label>
+            <input type="text" class="form-control" placeholder="Medical Allowance" name="medicalAllowance" required ng-model="form.medicalAllowance" ng-pattern="/^[0-9]*$/"  />
+          </div>
+          <div class="error" ng-show="paydetail.medicalAllowance.$error.required && paydetail.medicalAllowance.$touched && !formSubmitted " style="color: red;">
+            This field is required.
+          </div>
+          <div class="error" ng-show="paydetail.medicalAllowance.$error.pattern "  style="color: red;">
+            Only numeric  characters are allowed.
+        </div>
+      </li>   -->
+      <!-- <li>
+        <div class="form-group">
+          <label class="">Hra</label>
+          <input type="text" class="form-control" placeholder="Hra" name="hra" required ng-model="form.hra"  ng-pattern="/^[0-9]*$/" />
+        </div>
+        <div class="error" ng-show="paydetail.hra.$error.required && paydetail.hra.$touched && !formSubmitted" style="color: red;">
+          This field is required.
+        </div>
+        <div class="error" ng-show="paydetail.hra.$error.pattern && paydetail.hra.$touched"  style="color: red;">
+          Only numeric  characters are allowed.
+      </div>
+    </li>   -->
+        </ul> 
+        <div class="text-center"> <button type="button" class="btn bluebtn" ng-click="generate(form)">Generate</button></div>
+    </div>
+    <div ng-show="showSuccess" class="success-message">Data Posted Successfully!</div>
+    <div ng-show="showDelete" class="delete-message">Delete Data Successfully!</div>
+
+
+  </form>
+
+     <!-- data List -->
+        <div>
+          <!-- <div class="titles">Data List </div>    -->
+          <!-- <div class="tabletop fcs"> -->
+                 <div class="text-center" ng-if="showbtn"><button class="btn bluebtn" data-toggle="modal" id="exportToExcel" data-backdrop="static" data-keyboard="false" ng-click="(handleLink('pensioner_report'))"><i class="fa fa-eye"></i> Click To view report</button></div>
+                 <!-- <div class="searchfield"><input class="form-control" type="text" value="" placeholder="Search" ng-model="searchId" value="" placeholder="Search By Id" /></div> -->
+                <!-- <div style="display: flex;align-items: center;" ng-if="yrmon.month">
+                 <div style="display: flex;align-items: center;"><lable style="font-size: 16px;font-weight: 600;width: 100px;">Month :</lable> <lable class="form-control"> {{getMonthName(yrmon.month)}}</lable></div>
+                 <div style="display: flex;align-items: center;"><lable style="padding-left: 10px; font-size: 16px;font-weight: 600;width: 100px;">Year :</lable><lable class="form-control">{{yrmon.year}}</lable></div>
+                </div> -->
+               <!-- </div> -->
+         <!-- <div class="tablesec">
+                 <table class="table table-striped">
+                   <thead>
+                     <tr>
+                  <th width="100">Image</th>
+                       <th width="140">Pensioner Id</th>
+                       <th width="120">Name Of Employee</th>
+                       <th width="120">Name Of Pensioner</th>
+                       <th width="120">Pension Basic</th>
+                       <th width="120">Medical Allowance</th>
+                       <th width="120">Hra</th>
+                       <th width="120">DR</th>
+                       <th width="120">Gross Pension</th>
+                       <th width="120">Net Pension</th>
+                     </tr>
+                   </thead>
+         
+                   <tbody>
+                     <tr ng-repeat="x in pensionersData">
+                       <td>{{x.id}}</td>
+                       <td>{{x.nameOfEmployee}}</td>
+                       <td>{{x.nameOfPensioner}}</td>
+                       <td>{{x.basic}}</td>
+                       <td>{{x.ma}}</td>
+                       <td>{{x.hra}}</td>
+                       <td>{{x.dr}}</td>
+                       <td>{{x.grossPension}}</td>
+                       <td>{{x.totalAfterHraDeduction}}</td>
+                       <td> 
+                         <button class="btn editbtn" data-toggle="modal" data-placement="top" title="Edit" ng-click="editData(x)"><i class="fa fa-pencil"></i></button>
+                         <button class="btn viewbtn" data-toggle="modal" data-placement="top" title="View"><i class="fa fa-eye"></i></button>
+                         <button class="btn deletebtn" data-toggle="modal" data-placement="top" title="Delete"><i class="fa fa-trash" ng-click="DeleteData(x.pensionerId,x.dateFrom,$index)"></i></button> 
+                       </td> 
+                     </tr>                   
+                   </tbody>
+                 </table>
+               </div> -->
+        </div>
+<!-- data list End -->
+ 
+     </div>
+     <div class="loaderbg generateload" >
+      <div class="loading">
+        Generating
+      <span class="loading-dots">.</span>
+      <span class="loading-dots">.</span>
+      <span class="loading-dots">.</span>
+    </div>
+    </div>

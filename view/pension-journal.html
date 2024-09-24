@@ -1,0 +1,207 @@
+
+    <div ng-controller="pensionJournal">
+  <div class="titles">Pension Journal Form </div>  
+<form  name="pension" novalidate> 
+    <div class="formsec">    
+        <ul class="formshow list3">
+            <li>
+                <div class="form-group">
+                  <label class="required">Fin Year</label>
+                  <input type="text" class="form-control" placeholder="Fin Year" name="finYear" ng-model="form.finYear" required maxlength="9"  ng-disabled="flag" />
+                </div>
+                <div class="error" ng-show="pension.finYear.$error.required && pension.$submitted && !formSubmitted" style="color: red;">
+                  This field is required.
+                </div>
+                <div class="error" ng-show="pension.finYear.$error.maxlength && pension.finYear.$touched"  style="color: red;">
+                  Only  15 characters are allowed.
+              </div>
+            </li>
+            <li>
+                <div class="form-group">
+                  <label class="required">Journal Id </label>
+                  <input type="text" class="form-control" placeholder="Journal Id" name="journalId" required ng-model="form.journalId"  maxlength="9" ng-pattern="/^[0-9]*$/"  ng-disabled="flag" />
+                </div>
+                <div class="error" ng-show="pension.journalId.$error.required && pension.$submitted && !formSubmitted" style="color: red;">
+                  This field is required.
+                </div>
+                <div class="error" ng-show="pension.journalId.$error.pattern && pension.journalId.$touched && pension.journalId.$error.maxlength"  style="color: red;">
+                  Only numeric and 9 characters are allowed.
+              </div>
+            </li>    
+            <li>
+              <div class="form-group">
+                <label class="required">Tx Date</label>
+                <input type="text" class="datepicker form-control" datepicker placeholder="Tx Date" name="txDate" required ng-model="form.txDate" />
+              </div>
+              <div class="error" ng-show="pension.txDate.$error.required && pension.$submitted && !formSubmitted " style="color: red;">
+                This field is required.
+              </div>
+          </li>   
+          <li>
+            <div class="form-group">
+              <label class="required">Tx Table</label>
+              <input type="text" class="form-control" placeholder="Tx Table" name="txTable" required ng-model="form.txTable" maxlength="30" />
+            </div>
+            <div class="error" ng-show="pension.txTable.$error.required && pension.$submitted && !formSubmitted" style="color: red;">
+              This field is required.
+            </div>
+        </li>  
+        <li>
+          <div class="form-group">
+            <label class="required">Tx Type</label>
+            <input type="text" class="form-control" placeholder="Tx Type" name="txType" required ng-model="form.txType" maxlength="1" />
+          </div>
+          <div class="error" ng-show="pension.txType.$error.required && pension.$submitted && !formSubmitted" style="color: red;">
+            This field is required.
+          </div>
+      </li>  
+      <li>
+        <div class="form-group">
+          <label class="required">User Id</label>
+          <input type="text" class="form-control" name="userId" required placeholder="User Id" ng-model="form.userId" maxlength="10" />
+        </div>
+        <div class="error" ng-show="pension.userId.$error.required && pension.$submitted && !formSubmitted" style="color: red;">
+          This field is required.
+        </div>
+    </li>  
+        </ul> 
+        <div> <button type="button" class="btn bluebtn" ng-disabled="pension.$invalid" ng-click="savePayDetail(form)">Submit</button></div>
+    </div>
+    <div ng-show="showSuccess" class="success-message">Data Posted Successfully!</div>
+    <div ng-show="showDelete" class="delete-message">Delete Data Successfully!</div>
+
+  </form>
+
+     <!-- data List -->
+        <div>
+          <div class="titles lists" data-aos="fade-up" data-aos-duration="1000">Data List </div>   
+          <!-- <div class="tabletop fcs">
+                 <div><button class="btn bluebtn" data-toggle="modal" id="exportToExcel" data-backdrop="static" data-keyboard="false"><i class="fa fa-download"></i> Download</button></div>
+                 <div class="searchfield"><input class="form-control" type="text" value="" placeholder="Search"  ng-model="searchId" value="" placeholder="Search By Fin year"/></div>
+               </div> -->
+         <div class="tablesec">
+                 <table class="table table-striped">
+                   <thead>
+                     <tr>
+                       <th width="140">Fin Year</th>
+                       <th width="120">JournalId </th>
+                       <th width="120">Tx Date</th>
+                       <th width="120">Tx Table</th>
+                       <th width="120">Tx Type</th>
+                       <th width="120">User Id</th>
+                       <th width="120">Action</th>
+                     </tr>
+                   </thead>
+         
+                   <tbody>
+                     <tr ng-repeat="x in pensionJournalData | filter:{finYear:searchId}">
+                       <td>{{x.finYear}}</td>
+                       <td>{{x.journalId}}</td>
+                       <td>{{x.txDate}}</td>
+                       <td>{{x.txTable}}</td>
+                       <td>{{x.txType}}</td>
+                       <td>{{x.userId}}</td>
+                       <td> 
+                        <button class="btn editbtn" data-toggle="modal" data-placement="top" data-target="#editpensioner"
+                        title="Edit" ng-click="editData(x);"><i class="fa fa-pencil"></i></button>
+                         <!-- <button class="btn editbtn" data-toggle="modal" data-placement="top" title="Edit" ng-click="editData(x)"><i class="fa fa-pencil"></i></button> -->
+                         <!-- <button class="btn viewbtn" data-toggle="modal" data-placement="top" title="View"><i class="fa fa-eye"></i></button> -->
+                         <button class="btn deletebtn" data-toggle="modal" data-placement="top" title="Delete"><i class="fa fa-trash" ng-click="DeleteData(x.finYear,x.journalId,$index)"></i></button> 
+                       </td>
+                     </tr>                   
+                   </tbody>
+                 </table>
+               </div>
+        </div>
+<!-- data list End -->
+
+
+<!-- modal for edit -->
+<div class="modal fade" id="editpensioner" data-backdrop="static">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" ng-click="closemodal();cls();">&times;</button>
+        <h4 class="modal-title text-center">Edit Pension Journal</h4>
+      </div>
+      <div class="modal-body">
+          <form class="formsec" name="my">
+            <ul class="formshow list3">
+              <li>
+                  <div class="form-group">
+                    <label class="required">Fin Year</label>
+                    <input type="text" class="form-control" placeholder="Fin Year" name="finYear" ng-model="form.finYear" required maxlength="9"  ng-disabled="flag" />
+                  </div>
+                  <div class="error" ng-show="pension.finYear.$error.required && pension.$submitted && !formSubmitted" style="color: red;">
+                    This field is required.
+                  </div>
+                  <div class="error" ng-show="pension.finYear.$error.maxlength && pension.finYear.$touched"  style="color: red;">
+                    Only  15 characters are allowed.
+                </div>
+              </li>
+              <li>
+                  <div class="form-group">
+                    <label class="required">Journal Id </label>
+                    <input type="text" class="form-control" placeholder="Journal Id" name="journalId" required ng-model="form.journalId"  maxlength="9" ng-pattern="/^[0-9]*$/"  ng-disabled="flag" />
+                  </div>
+                  <div class="error" ng-show="pension.journalId.$error.required && pension.$submitted && !formSubmitted" style="color: red;">
+                    This field is required.
+                  </div>
+                  <div class="error" ng-show="pension.journalId.$error.pattern && pension.journalId.$touched && pension.journalId.$error.maxlength"  style="color: red;">
+                    Only numeric and 9 characters are allowed.
+                </div>
+              </li>    
+              <li>
+                <div class="form-group">
+                  <label class="required">Tx Date</label>
+                  <input type="text" class="datepicker form-control" datepicker placeholder="Tx Date" name="txDate" required ng-model="form.txDate" />
+                </div>
+                <div class="error" ng-show="pension.txDate.$error.required && pension.$submitted && !formSubmitted " style="color: red;">
+                  This field is required.
+                </div>
+            </li>   
+            <li>
+              <div class="form-group">
+                <label class="required">Tx Table</label>
+                <input type="text" class="form-control" placeholder="Tx Table" name="txTable" required ng-model="form.txTable" maxlength="30" />
+              </div>
+              <div class="error" ng-show="pension.txTable.$error.required && pension.$submitted && !formSubmitted" style="color: red;">
+                This field is required.
+              </div>
+          </li>  
+          <li>
+            <div class="form-group">
+              <label class="required">Tx Type</label>
+              <input type="text" class="form-control" placeholder="Tx Type" name="txType" required ng-model="form.txType" maxlength="1" />
+            </div>
+            <div class="error" ng-show="pension.txType.$error.required && pension.$submitted && !formSubmitted" style="color: red;">
+              This field is required.
+            </div>
+        </li>  
+        <li>
+          <div class="form-group">
+            <label class="required">User Id</label>
+            <input type="text" class="form-control" name="userId" required placeholder="User Id" ng-model="form.userId" maxlength="10" />
+          </div>
+          <div class="error" ng-show="pension.userId.$error.required && pension.$submitted && !formSubmitted" style="color: red;">
+            This field is required.
+          </div>
+      </li>  
+          </ul> 
+              <div class="modal-footer text-center">
+                  <div class="text-center">
+                    <button type="button" class="btn bluebtn"  ng-click="savePayDetail(form)">Update</button>
+                    <button type="button" class="btn bluebtn" data-dismiss="modal" ng-click="closemodal(); cls();">Close</button>
+                  </div>
+                </div> 
+          </form>
+         
+                </div>
+             </div>
+      </div>
+   </div>
+
+   <div class="popupbg"></div>
+
+     </div>
+ 
